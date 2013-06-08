@@ -5,5 +5,4 @@ Hello,
 
 Here is my [CV](https://docs.google.com/file/d/0B51AEMfo-fh9RGNCOUJVZTJCVm8/edit?usp=sharing)
 
-Thank you,
-Dmitry Grapov
+Have a great day!
