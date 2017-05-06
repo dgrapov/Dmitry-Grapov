@@ -8,6 +8,6 @@ He does [science](http://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en&oi
 
 If you want to learn more, here is his [resume](https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?usp=sharing). 
 
-He is available for hire, contact at dgrapov at gmail.com. 
+He is available for hire; learn more at createdatasol at gmail.com. 
 
 
