@@ -1,4 +1,4 @@
-baseURL: /
+baseURL: http://dgrapov.github.io/Dmitry-Grapov/
 languageCode: en-us
 theme: raditian-free-hugo-theme-data-science
 params:
@@ -51,3 +51,8 @@ menu:
     - URL: '#contact'
       name: Contact
       weight: 4
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
