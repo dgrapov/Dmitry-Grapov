@@ -1,0 +1,205 @@
+head:
+  title: "Dmitry Grapov's Portfolio"
+
+# showcase
+showcase:
+  enable: true
+  title: "Hello, I’m Dmitry Grapov"
+  subtitle: "Senior Director of Data Science and Engineering"
+  description: "Dmitry is the founder of <a target='_blank' href='https://creative-data.science/'>CDS - Creative Data Solutions</a>,<br>a bioinformatics, data visualization and machine learning software and consulting company."
+  image:
+    x: "img/showcase/cds.png"
+    _2x: "img/showcase/cds.png"
+  imageMobile:
+    x: "img/showcase/cds.png"
+    _2x: "img/showcase/cds.png"
+
+  button:
+    icon: "icon-mail-fill"
+    btnText: "Contact Dmitry"
+    URL: "mailto:dmitry@creative-data.solutions"
+
+  socialLinks:
+    - icon: "linkedin"
+      URL: "https://www.linkedin.com/in/dmitrygrapov/"
+
+    - icon: "github"
+      URL: "https://github.com/dgrapov"
+
+# about
+about:
+  enable: false
+  title: "Who am I?"
+  content: 
+    <p class="lead">
+    <strong>I have 15+ years experience in biotechnology.</strong> My passion multivariate data analysis, Omics, data visualization, network analysis and machine learning. When I am not busy programming and building tools, I like to trail run, mountain bike and work on my off grid farm. 
+    </p>
+  button:
+    icon: "icon-smile-fill"
+    btnText: "About Me"
+    URL: "https://www.linkedin.com/in/dmitrygrapov/"
+  image:
+    x: "img/who-am-i/user-picture.png"
+    _2x: "img/who-am-i/user-picture.png"
+
+# experience
+experience:
+  enable: true
+  title: "Experience"
+  description: "Over 15 years experience in biotechnology. My passion is multivariate data analysis, Omics, data visualization, network analysis and machine learning. When I am not busy programming and building tools, I like to trail run, mountain bike and work on my off grid farm. "
+  button:
+    icon: "icon-linkedin-fill"
+    btnText: "Linkedin"
+    URL: "https://www.linkedin.com/in/dmitrygrapov/"
+  button2:
+    icon: "icon-profile-fill"
+    btnText: "Resume"
+    URL: "https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw"
+  button3:
+    icon: "icon-profile-fill"
+    btnText: "CV"
+    URL: "https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA"
+  image:
+    x: "img/works/linkedin.png"
+    _2x: "img/works/linkedin.png"
+  image:
+    x: "img/works/linkedin.png"
+    _2x: "img/works/linkedin.png"
+    
+  
+# education
+education:
+  enable: true
+  title: "Education"
+  items:
+    - university: "Ph.D., University of California, Davis"
+      year: "2007 - 2012"
+      degree: "Agricultural and Environmental Chemistry with Empasis in Biotechnology"
+      
+    - university: "Business Development, University of California - Graduate School of Management"
+      year: "2012"
+      degree: "Certificate"
+
+    - university: "B.S., University of Utah"
+      year: "2000 - 2007"
+      degree: "Chemistry, Biology"
+
+
+# Client & Work
+client_and_work:
+  title: "Portfolio"
+  enable: true
+  
+  enable_clients: false
+  clients:
+    - logo:
+        x: "img/clients/asgardia.png"
+        _2x: "img/clients/asgardia@2x.png"
+      alt: "Asgardia"
+
+    - logo:
+        x: "img/clients/earth-2.png"
+        _2x: "img/clients/earth-2@2x.png"
+      alt: "Earth 2.0"
+
+    - logo:
+        x: "img/clients/goldline.png"
+        _2x: "img/clients/goldline@2x.png"
+      alt: "Goldline"
+
+    - logo:
+        x: "img/clients/kanba.png"
+        _2x: "img/clients/kanba@2x.png"
+      alt: "Kanba"
+
+    - logo:
+        x: "img/clients/zoo-tv.png"
+        _2x: "img/clients/zoo-tv@2x.png"
+      alt: "Zoo"
+
+    - logo:
+        x: "img/clients/ztos.png"
+        _2x: "img/clients/ztos@2x.png"
+      alt: "Ztos"
+
+  works:
+    - title: "Presentations and Teaching material"
+      description: ""
+      button:
+        icon: "icon-arrow-right"
+        btnText: "View"
+        URL: "https://www.slideshare.net/dgrapov"
+      image:
+        x: "img/works/presentations.png"
+        _2x: "img/works/presentations.png"
+      is_even: true
+
+    - title: "Software and Code"
+      description: "."
+      button:
+        icon: "icon-arrow-right"
+        btnText: "View"
+        URL: "https://business-science.shinyapps.io/cannondale_price_prediction_app/"
+      image:
+        x: "img/works/github.png"
+        _2x: "img/works/app_cannondale_price_prediction.jpg"
+      is_even: false
+
+    
+
+# testimonial
+testimonial:
+  enable: false
+  title: "Testimonials"
+  items:
+  
+    - name: "Justin Kurland, PhD"
+      position: "Lead Data Scientist, Northwestern Mutual"
+      content: "In less than 6 months after starting my first Business Science Course with Matt I had fully transitioned into a role as a lead data scientist and my life is better for it!"
+      image:
+        x: "img/testimonials/justin.jpg"
+        _2x: "img/testimonials/justin.jpg"
+        
+    - name: "Chris Selig"
+      position: "Data Scientist"
+      content: "Because of all the R courses Matt Dancho has provided, I landed my first Data Scientist role. Setting up shiny dashboards in AWS was extremely helpful during my interview."
+      image:
+        x: "img/testimonials/chris.jpg"
+        _2x: "img/testimonials/chris.jpg"
+
+    
+
+    - name: "Mohana Krishna Chittoor"
+      position: "Lead Data Scientist, Money View"
+      content: "After your entry into my life, I got a 10% pay raise and then after another 6-months of 26%, and in just another 2-months a 40% hike. I can grab a job wherever I want."
+      image:
+        x: "img/testimonials/mohana.jpg"
+        _2x: "img/testimonials/mohana.jpg"
+
+# contact
+contact:
+  enable: true
+  title: "Contact"
+    
+  image:
+    x: "img/who-am-i/user-picture.png"
+    _2x: "img/who-am-i/user-picture.png"
+    
+  button:
+    icon: "icon-mail-fill"
+    btnText: "Send Message"
+    btnAction: 'mailto:dmitry@creative-data.solutions'
+    
+  email:
+    title: "Email"
+    email: '<a href="mailto:dmitry@creative-data.solutions">dmitry@creative-data.solutions</a>'
+
+  
+
+# newsletter
+newsletter:
+  enable: false
+  title: "Newsletter subscription"
+  success_message: "Successfully subscribed"
+  error_message: "Error while subscribing."
+  note: "We'll never share your email with anyone else."
