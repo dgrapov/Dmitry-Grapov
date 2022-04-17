@@ -1,4 +1,4 @@
-baseURL: http://dgrapov.github.io/Dmitry-Grapov/
+baseURL: https://dgrapov.github.io/Dmitry-Grapov/
 languageCode: en-us
 theme: raditian-free-hugo-theme-data-science
 params:
