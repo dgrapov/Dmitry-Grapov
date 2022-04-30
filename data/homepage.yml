@@ -81,8 +81,12 @@ education:
       degree: "Certificate"
 
     - university: "B.S., University of Utah"
-      year: "2000 - 2007"
-      degree: "Chemistry, Biology"
+      year: "2005 - 2007"
+      degree: "Chemistry"
+    
+    - university: "B.S., University of Utah"
+      year: "2000 - 2005"
+      degree: "Biology"
 
 
 # Client & Work
