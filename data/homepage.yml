@@ -123,6 +123,40 @@ client_and_work:
       alt: "Ztos"
 
   works:
+  
+    - title: "Software and Code"
+      description: "."
+      button:
+        icon: "icon-arrow-right"
+        btnText: "View"
+        URL: "https://business-science.shinyapps.io/cannondale_price_prediction_app/"
+      image:
+        x: "img/works/github.png"
+        _2x: "img/works/app_cannondale_price_prediction.jpg"
+      is_even: false
+      
+    - title: "Science"
+      description: ""
+      button:
+        icon: "icon-arrow-right"
+        btnText: "View"
+        URL: "https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en"
+      image:
+        x: "img/works/science.png"
+        _2x: "img/works/science.png"
+      is_even: true     
+      
+    - title: "Videos"
+      description: ""
+      button:
+        icon: "icon-arrow-right"
+        btnText: "View"
+        URL: "https://www.youtube.com/user/dgrapov/videos"
+      image:
+        x: "img/works/videos.png"
+        _2x: "img/works/videos.png"
+      is_even: false
+      
     - title: "Presentations and Teaching material"
       description: ""
       button:
@@ -134,18 +168,18 @@ client_and_work:
         _2x: "img/works/presentations.png"
       is_even: true
 
-    - title: "Software and Code"
-      description: "."
+    - title: "Art"
+      description: ""
       button:
         icon: "icon-arrow-right"
         btnText: "View"
-        URL: "https://business-science.shinyapps.io/cannondale_price_prediction_app/"
+        URL: "https://www.flickr.com/people/dgrapov/"
       image:
-        x: "img/works/github.png"
-        _2x: "img/works/app_cannondale_price_prediction.jpg"
+        x: "img/works/art.png"
+        _2x: "img/works/art.png"
       is_even: false
-
-    
+      
+   
 
 # testimonial
 testimonial:
