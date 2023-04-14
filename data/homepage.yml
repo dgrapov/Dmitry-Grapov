@@ -133,7 +133,7 @@ client_and_work:
       button:
         icon: "icon-arrow-right"
         btnText: "View"
-        URL: "https://business-science.shinyapps.io/cannondale_price_prediction_app/"
+        URL: "https://github.com/dgrapov"
       image:
         x: "img/works/github.png"
         _2x: "img/works/app_cannondale_price_prediction.jpg"
