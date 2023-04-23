@@ -136,9 +136,19 @@ client_and_work:
         URL: "https://github.com/dgrapov"
       image:
         x: "img/works/github.png"
-        _2x: "img/works/app_cannondale_price_prediction.jpg"
       is_even: false
-      
+    
+    - title: "Blog"
+      description: ""
+      button:
+        icon: "icon-arrow-right"
+        btnText: "View"
+        URL: "https://creativedatasolutions.github.io/cds.blog/"
+      image:
+        x: "img/works/blog.png"
+        _2x: "img/works/blog.png"
+      is_even: true
+    
     - title: "Science"
       description: ""
       button:
@@ -148,7 +158,18 @@ client_and_work:
       image:
         x: "img/works/science.png"
         _2x: "img/works/science.png"
-      is_even: true     
+      is_even: false
+      
+    - title: "Teaching"
+      description: ""
+      button:
+        icon: "icon-arrow-right"
+        btnText: "View"
+        URL: "https://github.com/dgrapov/TeachingDemos"
+      image:
+        x: "img/works/teaching.png"
+        _2x: "img/works/teaching.png"
+      is_even: true
       
     - title: "Videos"
       description: ""
