@@ -1,0 +1,57 @@
+/* DMTree — Color Tokens */
+
+:root {
+  /* ── Brand Primaries ─────────────────────────────────────── */
+  --color-gold:          #D9B13B;
+  --color-gold-deep:     #d4aa00;
+  --color-gold-muted:    #d3af37;
+  --color-gold-light:    #e8cc72;
+  --color-gold-pale:     #f3e4aa;
+  --color-gold-dim:      #a07c1e;
+
+  --color-green-dark:    #0f260f;
+  --color-green-deep:    #162e16;
+  --color-green-mid:     #1f3d1f;
+  --color-green-forest:  #2e5c2e;
+  --color-green-sage:    #4a7a4a;
+  --color-green-light:   #7aad7a;
+
+  /* ── Neutrals / Earth Tones ──────────────────────────────── */
+  --color-cream:         #f8f4e8;
+  --color-parchment:     #f2ecda;
+  --color-sand:          #e8dfc4;
+  --color-stone:         #c9bfa3;
+  --color-taupe:         #9a9080;
+  --color-bark:          #5c5448;
+  --color-soil:          #2a2420;
+  --color-ink:           #1a1610;
+
+  /* ── Semantic / Alias Tokens ─────────────────────────────── */
+  /* Surfaces */
+  --surface-hero:        var(--color-green-dark);
+  --surface-dark:        var(--color-green-deep);
+  --surface-card:        #ffffff;
+  --surface-card-warm:   var(--color-cream);
+  --surface-section:     var(--color-parchment);
+  --surface-overlay:     rgba(15, 38, 15, 0.72);
+
+  /* Text */
+  --text-on-dark:        var(--color-gold);
+  --text-on-dark-subtle: rgba(217, 177, 59, 0.65);
+  --text-on-light:       var(--color-ink);
+  --text-body:           var(--color-bark);
+  --text-muted:          var(--color-taupe);
+  --text-heading:        var(--color-green-dark);
+  --text-heading-light:  var(--color-gold);
+
+  /* Borders */
+  --border-gold:         rgba(217, 177, 59, 0.35);
+  --border-gold-solid:   var(--color-gold);
+  --border-green:        rgba(15, 38, 15, 0.18);
+  --border-subtle:       rgba(15, 38, 15, 0.10);
+
+  /* Accent */
+  --accent-primary:      var(--color-gold);
+  --accent-glow:         rgba(217, 177, 59, 0.18);
+  --accent-hover:        var(--color-gold-light);
+}
