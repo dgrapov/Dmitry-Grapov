@@ -11,8 +11,11 @@ Live at **https://dgrapov.github.io/Dmitry-Grapov/** via GitHub Pages (branch `m
   design variations (pixel hologram tree, scroll tunnel). See
   [`site-src/3d-forest/README.md`](site-src/3d-forest/README.md) for how to edit
   content/links and re-export to `docs/index.html`.
-- **`archive/hugo-site/`** — the previous Hugo-based site (theme, R build scripts,
-  old `docs/` output), kept for reference. No longer built or deployed.
+
+The previous Hugo-based site (theme, R build scripts, old `docs/` output, and
+its unrelated template placeholder content/testimonials) has been removed —
+this is a clean, from-scratch build. It's still recoverable from git history
+(the commit before this one) if ever needed.
 
 ## Editing content (links, bio, sections)
 
