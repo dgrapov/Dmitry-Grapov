@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <link rel="stylesheet" href="_ds/dmtree-design-system-acd4c727-bfe4-48d3-b535-347886b8cfe6/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/dmtree-design-system-acd4c727-bfe4-48d3-b535-347886b8cfe6/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/dmtree-design-system-acd4c727-bfe4-48d3-b535-347886b8cfe6/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/dmtree-design-system-acd4c727-bfe4-48d3-b535-347886b8cfe6/tokens/shadows.css">
+  <link rel="stylesheet" href="_ds/dmtree-design-system-acd4c727-bfe4-48d3-b535-347886b8cfe6/styles.css">
+  <script src="_ds/dmtree-design-system-acd4c727-bfe4-48d3-b535-347886b8cfe6/_ds_bundle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html,body{margin:0;padding:0;background:#000 !important;overflow:hidden}
+    @keyframes px-glitch{
+      0%{transform:translate(0,0);filter:none}
+      20%{transform:translate(-4px,2px);filter:hue-rotate(35deg) saturate(1.6)}
+      40%{transform:translate(3px,-2px)}
+      60%{transform:translate(-2px,-1px);filter:hue-rotate(-25deg)}
+      80%{transform:translate(2px,1px)}
+      100%{transform:translate(0,0);filter:none}
+    }
+    @keyframes px-blink{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
+    @keyframes px-scan{0%{transform:translateY(-10%)}100%{transform:translateY(110%)}}
+    @keyframes px-modal-in{from{opacity:0;transform:scale(0.94)}to{opacity:1;transform:scale(1)}}
+    ::selection{background:#39FF6A;color:#000}
+    a{color:#39FF6A}
+    a:hover{color:#B8FFCB}
+  </style>
+</helmet>
+<div style="position:fixed;inset:0;background:#000;font-family:'IBM Plex Mono',monospace;color:#39FF6A;overflow:hidden">
+
+  <div ref="{{ glitchWrapRef }}" style="position:absolute;inset:0">
+    <canvas ref="{{ canvasRef }}" style="width:100%;height:100%;display:block;image-rendering:pixelated;-ms-interpolation-mode:nearest-neighbor;cursor:{{ cursor }}"></canvas>
+  </div>
+
+  <div style="position:absolute;inset:0;pointer-events:none;opacity:0.16;background:repeating-linear-gradient(0deg,#39FF6A 0px,#39FF6A 1px,transparent 1px,transparent 4px);mix-blend-mode:overlay"></div>
+  <div style="position:absolute;left:0;right:0;height:14%;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(57,255,106,0.09),transparent);animation:px-scan 7s linear infinite"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 55%,transparent 40%,rgba(0,0,0,0.85) 100%)"></div>
+
+  <div ref="{{ labelLayerRef }}" style="position:absolute;inset:0;pointer-events:none">
+    <sc-for list="{{ nodeLabels }}" as="node" hint-placeholder-count="5">
+      <button onClick="{{ node.open }}" onMouseEnter="{{ node.hover }}" onMouseLeave="{{ node.unhover }}" data-px-label="1" style="all:unset;position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;font-family:'VT323',monospace;font-size:19px;letter-spacing:0.06em;color:#39FF6A;text-shadow:0 0 8px rgba(57,255,106,0.8);white-space:nowrap;padding:3px 8px;border:1px solid rgba(57,255,106,0.4);background:rgba(0,20,8,0.55);will-change:transform">{{ node.label }}</button>
+    </sc-for>
+  </div>
+
+  <div style="position:absolute;top:26px;left:30px;pointer-events:none;font-family:'VT323',monospace;font-size:26px;letter-spacing:0.1em;color:#39FF6A;text-shadow:0 0 10px rgba(57,255,106,0.7)">
+    DMITRY_GRAPOV<span style="animation:px-blink 1s step-end infinite">█</span>
+  </div>
+  <div style="position:absolute;top:60px;left:30px;pointer-events:none;font-size:10px;letter-spacing:0.24em;color:rgba(57,255,106,0.5)">HOLOGRAM // DIGITAL FOOD FOREST</div>
+
+  <div style="position:absolute;bottom:26px;left:30px;pointer-events:none;font-size:10px;letter-spacing:0.18em;color:rgba(57,255,106,0.45);display:flex;flex-direction:column;gap:5px">
+    <span>DRAG — ORBIT THE TREE</span>
+    <span>HOVER — PROBE NODE</span>
+    <span>CLICK — DECRYPT</span>
+  </div>
+
+  <div style="position:absolute;bottom:26px;right:30px;pointer-events:none;font-family:'VT323',monospace;font-size:16px;letter-spacing:0.1em;color:rgba(57,255,106,0.55)">{{ statusLine }}</div>
+
+  <sc-if value="{{ isOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;background:rgba(0,6,2,0.55);backdrop-filter:blur(3px)">
+      <div style="position:relative;width:100%;max-width:680px;animation:px-modal-in 260ms steps(6)">
+        <canvas ref="{{ netCanvasRef }}" style="position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);opacity:0.75;pointer-events:none"></canvas>
+        <div style="position:relative;border:1px solid #39FF6A;box-shadow:0 0 0 1px rgba(57,255,106,0.25),0 0 40px rgba(57,255,106,0.18),inset 0 0 60px rgba(57,255,106,0.05);background:rgba(0,14,6,0.92);padding:36px 40px 34px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px">
+            <div style="font-size:10px;letter-spacing:0.26em;color:#39FF6A">{{ open.kicker }}</div>
+            <button onClick="{{ closeModal }}" style="all:unset;cursor:pointer;font-family:'VT323',monospace;font-size:20px;line-height:1;color:#39FF6A;border:1px solid rgba(57,255,106,0.45);padding:1px 8px 3px">X</button>
+          </div>
+          <div style="font-family:'VT323',monospace;font-size:clamp(30px,4vw,44px);line-height:1.05;color:#B8FFCB;text-shadow:0 0 14px rgba(57,255,106,0.5);margin-bottom:18px">{{ open.title }}</div>
+          <div style="font-size:14px;line-height:1.75;color:rgba(184,255,203,0.8);text-wrap:pretty;margin-bottom:24px">{{ open.body }}</div>
+          <sc-if value="{{ open.hasChips }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px">
+              <sc-for list="{{ open.chips }}" as="chip" hint-placeholder-count="4">
+                <span style="font-size:10px;letter-spacing:0.1em;color:#39FF6A;border:1px solid rgba(57,255,106,0.4);padding:4px 9px">{{ chip }}</span>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;gap:10px">
+            <sc-for list="{{ open.links }}" as="link" hint-placeholder-count="2">
+              <a href="{{ link.url }}" target="_blank" rel="noopener" style="font-family:'VT323',monospace;font-size:18px;letter-spacing:0.04em;color:#39FF6A;text-decoration:none;border:1px solid rgba(57,255,106,0.5);padding:5px 14px 7px;background:rgba(57,255,106,0.06)" style-hover="background:rgba(57,255,106,0.2);color:#000">{{ link.label }}</a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {},
+  &quot;pixelSize&quot;: {&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:3.2,&quot;min&quot;:1,&quot;max&quot;:8,&quot;step&quot;:0.2,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Hologram&quot;,&quot;unit&quot;:&quot;px&quot;},
+  &quot;palette&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:[&quot;#39FF6A&quot;,&quot;#0B6B2E&quot;],&quot;tsType&quot;:&quot;string[]&quot;,&quot;section&quot;:&quot;Hologram&quot;}
+}">
+class Component extends DCLogic {
+  state = { openIndex: -1, hoverIndex: -1 };
+
+  sections = [
+    { label:'ROOTS', kicker:'ROOTS // ORIGIN', title:'Cultivating signal from noise', body:"Ph.D. in agricultural and environmental chemistry, and over fifteen years turning high-dimensional biology into human-readable signal. Founder of Creative Data Solutions, built to bring data science out of the black box. Off the clock: trail running, mountain biking, and tending an off-grid farm. Same principles — patience and feedback loops — grown into food instead of models.", chips:[], links:[{label:'LinkedIn', url:'https://www.linkedin.com/in/dmitrygrapov/'}] },
+    { label:'CANOPY', kicker:'CANOPY // CODE & SCIENCE', title:'Open tools for messy data', body:'Metabolomics, network analysis, and machine learning pipelines grown into open software — pathway-independent network mapping, multivariate analysis, and the tooling that makes Omics data legible.', chips:['MetaMapR','DeviumWeb','networkly','CTSgetR','imDEV'], links:[{label:'GitHub', url:'https://github.com/dgrapov'},{label:'Scholar', url:'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en'}] },
+    { label:'MYCELIUM', kicker:'MYCELIUM // TEACHING', title:'Knowledge spreads root to root', body:'Workshops, conference talks, and open tutorials on multivariate analysis, gene ontology, and network biology.', chips:[], links:[{label:'Demos', url:'https://github.com/dgrapov/TeachingDemos'},{label:'Slides', url:'https://www.slideshare.net/dgrapov'},{label:'Video', url:'https://www.youtube.com/user/dgrapov/videos'}] },
+    { label:'WILD GROWTH', kicker:'GROWTH // WRITING & ART', title:"What doesn't fit in a dataframe", body:'Field notes on data science, R, and machine learning — alongside photography and image-making.', chips:[], links:[{label:'Blog', url:'https://creativedatasolutions.github.io/cds.blog/'},{label:'Flickr', url:'https://www.flickr.com/people/dgrapov/'}] },
+    { label:'GRAFT', kicker:'GRAFT // CONTACT', title:"Let's grow something", body:'Open to collaboration, consulting, and conversations about network graphs or trail routes.', chips:[], links:[{label:'Email', url:'mailto:dmitry@creative-data.solutions'},{label:'LinkedIn', url:'https://www.linkedin.com/in/dmitrygrapov/'},{label:'GitHub', url:'https://github.com/dgrapov'}] },
+  ];
+
+  canvasRef = React.createRef();
+  glitchWrapRef = React.createRef();
+  labelLayerRef = React.createRef();
+  netCanvasRef = React.createRef();
+
+  hoverIndex = -1;
+  openIndex = -1;
+  orbit = { theta: 0.35, phi: 1.18, autoT: 0 };
+  drag = null;
+  bursts = [];
+  net = null;
+
+  componentDidMount() {
+    this.setup();
+  }
+
+  componentWillUnmount() {
+    if (this.rafId) cancelAnimationFrame(this.rafId);
+    window.removeEventListener('resize', this.onResize);
+    if (this.three) this.three.renderer.dispose();
+  }
+
+  componentDidUpdate() {
+    if (this.state.openIndex >= 0 && this.netCanvasRef.current && !this.net) this.initNet();
+    if (this.state.openIndex < 0) this.net = null;
+  }
+
+  glitch(ms) {
+    const el = this.glitchWrapRef.current;
+    if (!el) return;
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = `px-glitch ${ms || 300}ms steps(3) 1`;
+  }
+
+  // ---- voxel tree generation ----
+  buildVoxels(step) {
+    const cells = new Map();
+    const key = (x, y, z) => `${x},${y},${z}`;
+    const put = (x, y, z, kind) => { const k = key(x, y, z); if (!cells.has(k)) cells.set(k, { x, y, z, kind }); };
+
+    const stamp = (from, to, r) => {
+      const d = [to[0] - from[0], to[1] - from[1], to[2] - from[2]];
+      const len = Math.hypot(d[0], d[1], d[2]);
+      const steps = Math.max(2, Math.round(len * 2.4));
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        const px = Math.round(from[0] + d[0] * t), py = Math.round(from[1] + d[1] * t), pz = Math.round(from[2] + d[2] * t);
+        for (let ox = -r; ox <= r; ox++) for (let oy = -r; oy <= r; oy++) for (let oz = -r; oz <= r; oz++) {
+          if (Math.hypot(ox, oy, oz) <= r + 0.35) put(px + ox, py + oy, pz + oz, 'wood');
+        }
+      }
+    };
+
+    // slim trunk — the crowns, not the trunk, carry the silhouette
+    stamp([0, 0, 0], [0, 8, 0], 1);
+    stamp([0, 8, 0], [0, 15, 0], 0);
+    // roots
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 + 0.4;
+      stamp([0, 1, 0], [Math.cos(a) * 6, -1, Math.sin(a) * 6], 0);
+    }
+    // five load-bearing branches, deliberately spread in angle AND height
+    const spec = [
+      { a: 0.20, y0: 2.6, reach: 9.5, ty: 4.0 },
+      { a: 1.45, y0: 5.0, reach: 8.6, ty: 8.0 },
+      { a: 2.70, y0: 7.4, reach: 9.0, ty: 12.0 },
+      { a: 3.95, y0: 9.8, reach: 7.6, ty: 16.0 },
+      { a: 5.20, y0: 12.2, reach: 6.5, ty: 19.0 },
+    ];
+    const branches = spec.map(s => {
+      const tip = [Math.cos(s.a) * s.reach, s.ty, Math.sin(s.a) * s.reach];
+      stamp([0, s.y0, 0], tip, 0);
+      return tip;
+    });
+    // filler twigs for texture (no nodes attached)
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2 + 0.9;
+      const y0 = 5 + (i % 3) * 2.6;
+      stamp([0, y0, 0], [Math.cos(a) * (3.0 + (i % 3) * 0.7), y0 + 2.4, Math.sin(a) * (3.0 + (i % 3) * 0.7)], 0);
+    }
+    stamp([0, 15, 0], [0, 21.5, 0], 0);
+    branches.push([0, 22.2, 0]);
+
+    // sparse leaf clouds only at outer tips — keep branch structure visible
+    branches.forEach((tip, bi) => {
+      const R = bi === branches.length - 1 ? 2.0 : 2.6;
+      for (let x = -3; x <= 3; x++) for (let y = -3; y <= 3; y++) for (let z = -3; z <= 3; z++) {
+        const d = Math.hypot(x, y * 1.25, z);
+        if (d > R) continue;
+        if (Math.random() > 0.3) continue;
+        put(Math.round(tip[0]) + x, Math.round(tip[1]) + y, Math.round(tip[2]) + z, 'leaf');
+      }
+    });
+
+    return { cells: [...cells.values()], branches };
+  }
+
+  async setup() {
+    const THREE = await import('three');
+    const canvas = this.canvasRef.current;
+    if (!canvas) return;
+    const pal = (this.props.palette && this.props.palette.length >= 2) ? this.props.palette : ['#39FF6A', '#0B6B2E'];
+    const px = this.props.pixelSize ?? 3.2;
+    const step = 0.45;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+    scene.fog = new THREE.FogExp2(0x000000, 0.055);
+
+    const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 300);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+    renderer.setPixelRatio(1 / px);
+
+    scene.add(new THREE.AmbientLight(0x0d2a18, 0.35));
+    const key = new THREE.DirectionalLight(new THREE.Color(pal[0]), 1.9);
+    key.position.set(7, 13, 9);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(new THREE.Color(pal[1]), 0.35);
+    fill.position.set(-8, 3, -7);
+    scene.add(fill);
+
+    const { cells, branches } = this.buildVoxels(step);
+    const geo = new THREE.BoxGeometry(step * 0.6, step * 0.6, step * 0.6);
+    const mat = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.95 });
+    const inst = new THREE.InstancedMesh(geo, mat, cells.length);
+    const bright = new THREE.Color(pal[0]), deep = new THREE.Color(pal[1]);
+    const dummy = new THREE.Object3D();
+    const cellData = [];
+    cells.forEach((c, i) => {
+      const p = new THREE.Vector3(c.x * step, c.y * step, c.z * step);
+      dummy.position.copy(p);
+      dummy.updateMatrix();
+      inst.setMatrixAt(i, dummy.matrix);
+      const mix = c.kind === 'leaf' ? 0.34 + Math.random() * 0.2 : 0.78 + Math.random() * 0.22;
+      const col = deep.clone().lerp(bright, mix);
+      inst.setColorAt(i, col);
+      cellData.push({ p, base: col.clone(), kind: c.kind });
+    });
+    inst.instanceMatrix.needsUpdate = true;
+    if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
+    scene.add(inst);
+
+    // section nodes on outer branch tips
+    const nodes = this.sections.map((s, i) => {
+      const t = branches[i] || branches[0];
+      const pos = new THREE.Vector3(t[0] * step * 1.12, t[1] * step, t[2] * step * 1.12);
+      const g = new THREE.BoxGeometry(0.62, 0.62, 0.62);
+      const m = new THREE.MeshBasicMaterial({ color: new THREE.Color(pal[0]) });
+      const mesh = new THREE.Mesh(g, m);
+      mesh.position.copy(pos);
+      scene.add(mesh);
+      const halo = new THREE.Mesh(new THREE.BoxGeometry(1.05, 1.05, 1.05), new THREE.MeshBasicMaterial({ color: new THREE.Color(pal[0]), transparent: true, opacity: 0.18, wireframe: true }));
+      halo.position.copy(pos);
+      scene.add(halo);
+      const light = new THREE.PointLight(new THREE.Color(pal[0]), 1.0, 7, 2);
+      light.position.copy(pos);
+      scene.add(light);
+      return { mesh, halo, light, pos, index: i };
+    });
+
+    // burst particle pool
+    const MAX = 900;
+    const bpos = new Float32Array(MAX * 3);
+    const bgeo = new THREE.BufferGeometry();
+    bgeo.setAttribute('position', new THREE.BufferAttribute(bpos, 3));
+    const bmat = new THREE.PointsMaterial({ color: new THREE.Color(pal[0]), size: 0.16, transparent: true, opacity: 0.9, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    const bpts = new THREE.Points(bgeo, bmat);
+    bpts.frustumCulled = false;
+    scene.add(bpts);
+    for (let i = 0; i < MAX; i++) { bpos[i * 3 + 1] = 9999; }
+
+    // ambient motes
+    const M = 260;
+    const mpos = new Float32Array(M * 3);
+    for (let i = 0; i < M; i++) {
+      mpos[i * 3] = (Math.random() - 0.5) * 22;
+      mpos[i * 3 + 1] = Math.random() * 14 - 1;
+      mpos[i * 3 + 2] = (Math.random() - 0.5) * 22;
+    }
+    const mgeo = new THREE.BufferGeometry();
+    mgeo.setAttribute('position', new THREE.BufferAttribute(mpos, 3));
+    const motes = new THREE.Points(mgeo, new THREE.PointsMaterial({ color: new THREE.Color(pal[0]), size: 0.09, transparent: true, opacity: 0.45, depthWrite: false, blending: THREE.AdditiveBlending }));
+    scene.add(motes);
+
+    // ground grid
+    const grid = new THREE.GridHelper(40, 40, new THREE.Color(pal[1]), new THREE.Color(pal[1]));
+    grid.material.transparent = true; grid.material.opacity = 0.28;
+    grid.position.y = -0.5;
+    scene.add(grid);
+
+    this.three = { THREE, scene, camera, renderer, inst, cellData, nodes, bpts, bpos, MAX, motes, mpos, M, pal, step };
+    this.camTarget = new THREE.Vector3(0, 5.0, 0);
+    this.camDist = 19;
+
+    this.onResize = this.onResize.bind(this);
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+    this.bindPointer(canvas, THREE);
+
+    const raycaster = new THREE.Raycaster();
+    this.raycaster = raycaster;
+    const clock = new THREE.Clock();
+    let lastEmit = 0;
+
+    const loop = () => {
+      this.rafId = requestAnimationFrame(loop);
+      const t = clock.getElapsedTime();
+      const dt = Math.min(0.05, clock.getDelta ? 0.016 : 0.016);
+
+      if (!this.drag && this.openIndex < 0) this.orbit.theta += 0.0013;
+
+      const focus = this.openIndex >= 0 ? nodes[this.openIndex] : null;
+      const wantDist = focus ? 7 : 19;
+      const wantTarget = focus ? focus.pos : new THREE.Vector3(0, 5.0, 0);
+      this.camDist += (wantDist - this.camDist) * 0.06;
+      this.camTarget.lerp(wantTarget, 0.06);
+
+      const r = this.camDist, ph = this.orbit.phi, th = this.orbit.theta;
+      camera.position.set(
+        this.camTarget.x + r * Math.sin(ph) * Math.sin(th),
+        this.camTarget.y + r * Math.cos(ph) + 2.2,
+        this.camTarget.z + r * Math.sin(ph) * Math.cos(th)
+      );
+      camera.lookAt(this.camTarget);
+
+      nodes.forEach(nd => {
+        const active = nd.index === this.hoverIndex || nd.index === this.openIndex;
+        const pulse = 1 + Math.sin(t * 3 + nd.index) * 0.06;
+        const s = (active ? 1.7 : 1) * pulse;
+        nd.mesh.scale.setScalar(s);
+        nd.halo.scale.setScalar(s * (active ? 2.1 : 1.5));
+        nd.halo.rotation.y = t * (active ? 1.2 : 0.25) + nd.index;
+        nd.halo.rotation.x = t * 0.2;
+        nd.halo.material.opacity = active ? 0.5 : 0.16;
+        nd.light.intensity = active ? 3.0 : 0.9 + Math.sin(t * 2.4 + nd.index) * 0.25;
+      });
+
+      // hover burst emission
+      if (this.hoverIndex >= 0 && t - lastEmit > 0.045) {
+        lastEmit = t;
+        const p = nodes[this.hoverIndex].pos;
+        for (let k = 0; k < 8; k++) {
+          const dir = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(1.4 + Math.random() * 2.2);
+          this.bursts.push({ p: p.clone(), v: dir, life: 1 });
+        }
+      }
+      this.bursts = this.bursts.filter(b => b.life > 0);
+      if (this.bursts.length > MAX) this.bursts.splice(0, this.bursts.length - MAX);
+      for (let i = 0; i < MAX; i++) {
+        const b = this.bursts[i];
+        if (!b) { bpos[i * 3 + 1] = 9999; continue; }
+        b.life -= 0.02;
+        b.p.addScaledVector(b.v, 0.016);
+        b.v.multiplyScalar(0.965);
+        b.v.y += 0.008;
+        bpos[i * 3] = b.p.x; bpos[i * 3 + 1] = b.p.y; bpos[i * 3 + 2] = b.p.z;
+      }
+      bgeo.attributes.position.needsUpdate = true;
+
+      for (let i = 0; i < M; i++) {
+        mpos[i * 3 + 1] += 0.006 + (i % 5) * 0.001;
+        if (mpos[i * 3 + 1] > 14) mpos[i * 3 + 1] = -1;
+      }
+      mgeo.attributes.position.needsUpdate = true;
+
+      // leaf shimmer
+      if (Math.random() < 0.55) {
+        const c = Math.floor(Math.random() * cellData.length);
+        if (cellData[c].kind === 'leaf') {
+          const col = cellData[c].base.clone().multiplyScalar(0.7 + Math.random() * 0.9);
+          inst.setColorAt(c, col);
+          if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
+        }
+      }
+
+      this.updateLabels(camera, nodes);
+      if (this.net) this.drawNet();
+      renderer.render(scene, camera);
+    };
+    loop();
+  }
+
+  updateLabels(camera, nodes) {
+    const layer = this.labelLayerRef.current;
+    if (!layer) return;
+    const els = layer.querySelectorAll('[data-px-label]');
+    const w = layer.clientWidth, h = layer.clientHeight;
+    const placed = [];
+    nodes.forEach((nd, i) => {
+      const el = els[i];
+      if (!el) return;
+      const v = nd.pos.clone().project(camera);
+      const x = (v.x * 0.5 + 0.5) * w, y = (-v.y * 0.5 + 0.5) * h;
+      const lw = el.offsetWidth || 100, lh = el.offsetHeight || 26;
+      // pick the first candidate offset (from a fixed base) that clears placed labels
+      const hits = (cy) => placed.some(p => Math.abs(p.x - x) < (p.w + lw) / 2 + 6 && Math.abs(p.y - cy) < lh + 8);
+      const gap = lh + 12, base = -34;
+      let oy = base;
+      for (let k = 0; k < 9; k++) {
+        const d = k === 0 ? 0 : (k % 2 === 1 ? 1 : -1) * gap * Math.ceil(k / 2);
+        if (!hits(y + base + d)) { oy = base + d; break; }
+        oy = base + d;
+      }
+      const visible = v.z < 1 && this.openIndex < 0;
+      if (visible) placed.push({ x, y: y + oy, w: lw, h: lh });
+      el.style.transform = `translate(${Math.round(x)}px,${Math.round(y + oy)}px) translateX(-50%)`;
+      el.style.opacity = visible ? (this.hoverIndex === i ? '1' : '0.72') : '0';
+      el.style.pointerEvents = visible ? 'auto' : 'none';
+      el.style.background = this.hoverIndex === i ? 'rgba(57,255,106,0.22)' : 'rgba(0,20,8,0.55)';
+    });
+  }
+
+  bindPointer(canvas, THREE) {
+    const ndc = new THREE.Vector2();
+    const pick = (e) => {
+      const r = canvas.getBoundingClientRect();
+      ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+      this.raycaster.setFromCamera(ndc, this.three.camera);
+      const hits = this.raycaster.intersectObjects(this.three.nodes.map(n => n.mesh));
+      return hits.length ? this.three.nodes.find(n => n.mesh === hits[0].object).index : -1;
+    };
+    canvas.addEventListener('pointerdown', (e) => {
+      this.drag = { x: e.clientX, y: e.clientY, th: this.orbit.theta, ph: this.orbit.phi, moved: 0 };
+      canvas.setPointerCapture(e.pointerId);
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (this.drag) {
+        const dx = e.clientX - this.drag.x, dy = e.clientY - this.drag.y;
+        this.drag.moved = Math.max(this.drag.moved, Math.hypot(dx, dy));
+        this.orbit.theta = this.drag.th - dx * 0.006;
+        this.orbit.phi = Math.min(1.62, Math.max(0.55, this.drag.ph + dy * 0.004));
+        return;
+      }
+      if (this.openIndex >= 0) return;
+      const idx = pick(e);
+      if (idx !== this.hoverIndex) this.setHover(idx);
+    });
+    canvas.addEventListener('pointerup', (e) => {
+      const wasDrag = this.drag && this.drag.moved > 6;
+      this.drag = null;
+      if (wasDrag || this.openIndex >= 0) return;
+      const idx = pick(e);
+      if (idx >= 0) this.openNode(idx);
+    });
+    canvas.addEventListener('pointerleave', () => { this.drag = null; this.setHover(-1); });
+    canvas.addEventListener('wheel', (e) => { e.preventDefault(); }, { passive: false });
+  }
+
+  setHover(idx) {
+    if (idx === this.hoverIndex) return;
+    this.hoverIndex = idx;
+    if (idx >= 0) this.glitch(240);
+    this.setState({ hoverIndex: idx });
+  }
+
+  openNode(i) {
+    this.openIndex = i;
+    this.hoverIndex = -1;
+    this.glitch(420);
+    this.setState({ openIndex: i, hoverIndex: -1 });
+  }
+
+  closeModal() {
+    this.openIndex = -1;
+    this.net = null;
+    this.glitch(300);
+    this.setState({ openIndex: -1 });
+  }
+
+  initNet() {
+    const c = this.netCanvasRef.current;
+    if (!c) return;
+    const w = c.clientWidth, h = c.clientHeight;
+    c.width = w; c.height = h;
+    const pts = [];
+    for (let i = 0; i < 46; i++) pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35 });
+    this.net = { c, ctx: c.getContext('2d'), pts, w, h };
+  }
+
+  drawNet() {
+    const n = this.net;
+    if (!n || !n.c.isConnected) { this.net = null; return; }
+    const { ctx, pts, w, h } = n;
+    ctx.clearRect(0, 0, w, h);
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+    });
+    ctx.lineWidth = 1;
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+        if (d > 120) continue;
+        ctx.strokeStyle = `rgba(57,255,106,${(1 - d / 120) * 0.4})`;
+        ctx.beginPath();
+        ctx.moveTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[j].x, pts[j].y);
+        ctx.stroke();
+      }
+    }
+    ctx.fillStyle = 'rgba(57,255,106,0.85)';
+    pts.forEach(p => ctx.fillRect(Math.round(p.x) - 1, Math.round(p.y) - 1, 3, 3));
+  }
+
+  onResize() {
+    if (!this.three) return;
+    const c = this.canvasRef.current;
+    this.three.camera.aspect = c.clientWidth / c.clientHeight;
+    this.three.camera.updateProjectionMatrix();
+    this.three.renderer.setSize(c.clientWidth, c.clientHeight, false);
+  }
+
+  renderVals() {
+    const open = this.state.openIndex >= 0 ? this.sections[this.state.openIndex] : this.sections[0];
+    const hv = this.state.hoverIndex;
+    return {
+      canvasRef: this.canvasRef,
+      glitchWrapRef: this.glitchWrapRef,
+      labelLayerRef: this.labelLayerRef,
+      netCanvasRef: this.netCanvasRef,
+      cursor: hv >= 0 ? 'pointer' : 'grab',
+      nodeLabels: this.sections.map((s, i) => ({
+        label: '[ ' + s.label + ' ]',
+        open: () => this.openNode(i),
+        hover: () => this.setHover(i),
+        unhover: () => this.setHover(-1),
+      })),
+      statusLine: this.state.openIndex >= 0
+        ? '> DECRYPTED: ' + this.sections[this.state.openIndex].label
+        : (hv >= 0 ? '> PROBING: ' + this.sections[hv].label : '> IDLE // 5 NODES ONLINE'),
+      isOpen: this.state.openIndex >= 0,
+      open: { ...open, hasChips: open.chips.length > 0 },
+      closeModal: () => this.closeModal(),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

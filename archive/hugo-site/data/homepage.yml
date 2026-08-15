@@ -5,7 +5,7 @@ head:
 showcase:
   enable: true
   title: "Hello, I’m Dmitry Grapov"
-  subtitle: "Senior Director of Data Science and Engineering"
+  subtitle: "VP, Computing Technology — Leading AI/ML, Data &amp; Software Engineering, DevOps and Enterprise IT to Power Synthetic Biology at Amyris"
   description: "Dmitry is the founder of <a target='_blank' href='https://creative-data.science/'>CDS - Creative Data Solutions</a>,<br>a bioinformatics, data visualization and machine learning software and consulting company."
   image:
     x: "img/showcase/cds.png"
@@ -46,7 +46,15 @@ about:
 experience:
   enable: true
   title: "Experience"
-  description: "Over 15 years experience in biotechnology. My passion is multivariate data analysis, Omics, data visualization, network analysis and machine learning. When I am not busy programming and building tools, I like to trail run, mountain bike and work on my off grid farm. "
+  description: "18+ years leading <strong>AI/ML, Data &amp; Software Engineering, DevOps and Enterprise IT</strong> across synthetic biology, healthcare and agricultural genomics.
+    <ul class='mt-3'>
+      <li><strong>AI/ML &amp; Data Science</strong> &mdash; predictive modeling, experiment optimization, decision support</li>
+      <li><strong>Data Engineering &amp; Architecture</strong> &mdash; modern data platforms, pipelines and governance</li>
+      <li><strong>Software Engineering</strong> &mdash; tools and applications for R&amp;D, manufacturing and business</li>
+      <li><strong>DevOps &amp; Cloud Infrastructure</strong> &mdash; secure, automated, scalable environments (AWS, Docker, IaC)</li>
+      <li><strong>Enterprise IT &amp; Productivity</strong> &mdash; resilient systems that enable people to do their best work</li>
+    </ul>
+    Currently VP, Computing Technology at Amyris; also founder of CDS &ndash; Creative Data Solutions. When I am not building tools, I like to trail run, mountain bike and work on my off-grid farm."
   button:
     icon: "icon-linkedin-fill"
     btnText: "Linkedin"
@@ -62,11 +70,61 @@ experience:
   image:
     x: "img/works/linkedin.png"
     _2x: "img/works/linkedin.png"
-  image:
-    x: "img/works/linkedin.png"
-    _2x: "img/works/linkedin.png"
-    
-  
+
+  items:
+    - duration: "Nov 2025 - Present"
+      title: "Vice President, Computing Technology"
+      company: "Amyris"
+
+    - duration: "Dec 2024 - Nov 2025"
+      title: "Senior Director, Data Science, Engineering &amp; IT Operations"
+      company: "Amyris"
+
+    - duration: "Apr 2022 - Dec 2024"
+      title: "Senior Director, Data Science"
+      company: "Amyris"
+
+    - duration: "Jan 2021 - Apr 2022"
+      title: "Director, Data Science"
+      company: "Amyris"
+
+    - duration: "Feb 2020 - Jan 2021"
+      title: "Principal Data Scientist, Bioinformatics, Automation &amp; Software Engineering"
+      company: "Amyris"
+
+    - duration: "Sep 2013 - Present"
+      title: "Founder"
+      company: "CDS - Creative Data Solutions"
+
+    - duration: "Dec 2019 - Feb 2020"
+      title: "Director, Data Science and Engineering"
+      company: "Centene Corporation"
+
+    - duration: "Jan 2019 - Dec 2019"
+      title: "Data Science Manager, Predictive Platforms &amp; Engineering"
+      company: "Centene Corporation"
+
+    - duration: "Oct 2018 - Jan 2019"
+      title: "Lead Data Scientist, Predictive Platforms &amp; Engineering"
+      company: "Centene Corporation"
+
+    - duration: "Aug 2018 - Oct 2018"
+      title: "Data Science and Engineering Cloud Platform Lead"
+      company: "Bayer"
+
+    - duration: "Apr 2018 - Aug 2018"
+      title: "Data Science and Engineering Cloud Platform Lead"
+      company: "Monsanto Company"
+
+    - duration: "Apr 2016 - Apr 2018"
+      title: "Visual and Predictive Analytics Lead, Genomics and Data Science"
+      company: "Monsanto Company"
+
+    - duration: "Jan 2015 - Apr 2016"
+      title: "Data Scientist, Genomics and Data Science"
+      company: "Monsanto Company"
+
+
 # education
 education:
   enable: true
