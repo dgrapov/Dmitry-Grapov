@@ -112,11 +112,11 @@ class Component extends DCLogic {
   state = { openIndex: -1, hoverIndex: -1, found: [] };
 
   sections = [
-    { kicker:'MUSHROOM RING // ORIGIN', title:'Cultivating signal from noise', body:"Ph.D. in agricultural and environmental chemistry; 18+ years turning high-dimensional biology into human-readable signal. Now VP, Computing Technology at Amyris — leading AI/ML, data engineering, software engineering, DevOps and enterprise IT for synthetic biology — after leading data science teams at Centene, Bayer and Monsanto, and founding Creative Data Solutions. Off the clock: trail running, mountain biking, and tending an off-grid farm — same patience and feedback loops, grown into food instead of models.", chips:['Amyris','CDS','Centene','Bayer','Monsanto'], links:[{label:'LinkedIn', url:'https://www.linkedin.com/in/dmitrygrapov/'},{label:'Resume', url:'https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw'},{label:'CV', url:'https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA'},{label:'CDS', url:'https://creative-data.science/'}] },
-    { kicker:'THE HOLLOW // CODE, SCIENCE & PORTFOLIO', title:'Open tools for messy data', body:'Metabolomics, network analysis, and machine learning pipelines grown into open software. Most-starred: MetaMapR and DeviumWeb, each built to make Omics data legible instead of opaque.', chips:['MetaMapR','DeviumWeb','networkly','CTSgetR','TeachingDemos'], links:[{label:'GitHub', url:'https://github.com/dgrapov'},{label:'MetaMapR', url:'http://dgrapov.github.io/MetaMapR/'},{label:'DeviumWeb', url:'http://dgrapov.github.io/DeviumWeb/'},{label:'networkly', url:'http://dgrapov.github.io/networkly'},{label:'Scholar', url:'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en'}] },
-    { kicker:'SLIME MOLD // TEACHING', title:'Knowledge spreads root to root', body:'Workshops, conference talks, and open tutorials on multivariate analysis, gene ontology, and network biology.', chips:[], links:[{label:'Demos', url:'https://github.com/dgrapov/TeachingDemos'},{label:'Slides', url:'https://www.slideshare.net/dgrapov'},{label:'Video', url:'https://www.youtube.com/user/dgrapov/videos'}] },
-    { kicker:'THE CROW // WRITING & ART', title:"What doesn't fit in a dataframe", body:'Field notes on data science, R, and machine learning — across two blogs, old and new — alongside photography and image-making.', chips:[], links:[{label:'CDS Blog', url:'https://creativedatasolutions.github.io/cds.blog/'},{label:'imDEV Blog', url:'https://imdevsoftware.wordpress.com/'},{label:'Flickr', url:'https://www.flickr.com/people/dgrapov/'}] },
-    { kicker:'THE SPRING // CONTACT', title:"Let's grow something", body:'Open to collaboration, consulting, and conversations about network graphs or trail routes.', chips:[], links:[{label:'Email', url:'mailto:dmitry@creative-data.solutions'},{label:'LinkedIn', url:'https://www.linkedin.com/in/dmitrygrapov/'},{label:'GitHub', url:'https://github.com/dgrapov'}] },
+    { kicker:'MUSHROOM RING // ORIGIN', title:'Cultivating signal from noise', body:'Ph.D. with 18+ years experience at the intersection of bio and digital technology. Leading AI/ML, data engineering, software engineering, DevOps and enterprise IT for synthetic biology. Non digital: trail running, mountain biking, hiking.', chips:['Amyris','Centene','Bayer','Monsanto','CDS'], links:[{label: 'LinkedIn', url: 'https://www.linkedin.com/in/dmitrygrapov/'},{label: 'Resume', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw'},{label: 'CV', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA'},{label: 'CDS', url: 'https://creative-data.science/'}] },
+    { kicker:'THE HOLLOW // CODE, SCIENCE & PORTFOLIO', title:'Open tools for messy data', body:'Metabolomics, network analysis, and machine learning pipelines grown into open software. Most-starred: MetaMapR and DeviumWeb, each built to make Omics data legible instead of opaque.', chips:['MetaMapR','DeviumWeb','networkly','CTSgetR','TeachingDemos'], links:[{label: 'GitHub', url: 'https://github.com/dgrapov'},{label: 'MetaMapR', url: 'http://dgrapov.github.io/MetaMapR/'},{label: 'DeviumWeb', url: 'http://dgrapov.github.io/DeviumWeb/'},{label: 'networkly', url: 'http://dgrapov.github.io/networkly'},{label: 'Scholar', url: 'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en'}] },
+    { kicker:'SLIME MOLD // TEACHING', title:'Knowledge spreads root to root', body:'Workshops, conference talks, and open tutorials on multivariate analysis, gene ontology, and network biology.', chips:[], links:[{label: 'Demos', url: 'https://github.com/dgrapov/TeachingDemos'},{label: 'Slides', url: 'https://www.slideshare.net/dgrapov'},{label: 'Video', url: 'https://www.youtube.com/user/dgrapov/videos'}] },
+    { kicker:'THE CROW // WRITING & ART', title:'Beyond the dataframe', body:'Field notes on data science, programming, and machine learning, art and code.', chips:[], links:[{label: 'CDS Blog', url: 'https://creativedatasolutions.github.io/cds.blog/'},{label: 'imDEV Blog', url: 'https://imdevsoftware.wordpress.com/'},{label: 'Flickr', url: 'https://www.flickr.com/people/dgrapov/'}] },
+    { kicker:'THE SPRING // CONTACT', title:'To live is to grow', body:'Open to collaboration, consulting, and conversations about network graphs or trail routes.', chips:[], links:[{label: 'Email', url: 'mailto:dmitry@creative-data.solutions'},{label: 'LinkedIn', url: 'https://www.linkedin.com/in/dmitrygrapov/'},{label: 'GitHub', url: 'https://github.com/dgrapov'}] },
   ];
 
   canvasRef = React.createRef();
@@ -128,6 +128,7 @@ class Component extends DCLogic {
   net = null;
   parallax = { x: 0, y: 0, tx: 0, ty: 0 };
   lastMicro = 0;
+  camZoom = 1; // >1 on narrow/portrait screens; recomputed in onResize()
 
   componentDidMount() { this.setup(); }
   componentWillUnmount() {
@@ -757,7 +758,8 @@ class Component extends DCLogic {
       this.parallax.x += (this.parallax.tx - this.parallax.x) * 0.05;
       this.parallax.y += (this.parallax.ty - this.parallax.y) * 0.05;
       const bias = attn * 0.2;
-      camera.position.set(10 + this.parallax.x * 2.4 + fCenter.x * bias * 0.3, 8.5 + this.parallax.y * 1.6 + (fCenter.y - 6) * bias * 0.25, 23 - Math.abs(this.parallax.x) * 0.7);
+      const cz = this.camZoom;
+      camera.position.set(10 * cz + this.parallax.x * 2.4 + fCenter.x * bias * 0.3, 8.5 * cz + this.parallax.y * 1.6 + (fCenter.y - 6) * bias * 0.25, 23 * cz - Math.abs(this.parallax.x) * 0.7);
       camera.lookAt(this.parallax.x * 1.0 + fCenter.x * bias, 6 + this.parallax.y * 0.55 + (fCenter.y - 6) * bias * 0.4, fCenter.z * bias * 0.5);
       camera.rotation.z = this.parallax.x * 0.01;
 
@@ -1379,7 +1381,17 @@ class Component extends DCLogic {
   onResize() {
     if (!this.three) return;
     const c = this.canvasRef.current;
-    this.three.camera.aspect = c.clientWidth / c.clientHeight;
+    const aspect = c.clientWidth / c.clientHeight;
+    this.three.camera.aspect = aspect;
+    // Base framing (FOV 42, position ~(10,8.5,23)) was tuned for a landscape-ish
+    // aspect. On a narrower/taller screen the same vertical FOV yields a much
+    // narrower horizontal FOV, so the scene reads as cropped. Compensate by
+    // widening FOV and dollying the camera back (camZoom, applied in the
+    // per-frame position update) proportionally to how far below 1 the aspect
+    // is — landscape/desktop (aspect >= 1) is untouched.
+    const narrowness = Math.min(1.8, Math.max(1, 1 / Math.min(aspect, 1)));
+    this.camZoom = 1 + (narrowness - 1) * 0.6;
+    this.three.camera.fov = 42 + (narrowness - 1) * 14;
     this.three.camera.updateProjectionMatrix();
     this.three.renderer.setSize(c.clientWidth, c.clientHeight, false);
   }

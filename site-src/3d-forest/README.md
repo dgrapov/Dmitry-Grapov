@@ -14,6 +14,8 @@ a resident animation and one of the five clickable items.
 | `Dmitry Grapov Portfolio Pixel.dc.html` | Earlier variation: chunky pixel hologram tree, orbitable. |
 | `Dmitry Grapov Portfolio.dc.html` | Earliest variation: scroll-through tunnel of nodes. |
 | `support.js`, `_ds/` | Runtime + design-system assets used by the `.dc.html` sources. |
+| `sections.yml` | Editable content template (generated) — see [Editing via `sections.yml`](#editing-via-sectionsyml-recommended). |
+| `scripts/` | `sync-sections.sh export`/`apply` and their Node/Python helpers, for round-tripping `sections.yml` ⇄ the `.dc.html` source. |
 
 ## Editing the content
 
@@ -45,6 +47,26 @@ Notes
 - `chips` are for project/tool names. An empty array removes the row entirely.
 - `links` render as bordered buttons in order; 1–3 works best. `mailto:` links are fine.
 - Don't rename the keys, and keep exactly five entries unless you also change the scene (below).
+
+### Editing via `sections.yml` (recommended)
+
+Instead of hand-editing the one-line-per-section JS array above, edit a plain YAML template:
+
+```bash
+cd site-src/3d-forest
+scripts/sync-sections.sh export   # html -> sections.yml (pulls the current copy)
+$EDITOR sections.yml              # edit kicker / title / body / chips / links
+scripts/sync-sections.sh apply    # sections.yml -> html (writes the array back)
+```
+
+`sections.yml` holds the same five entries, one YAML doc each, with `body` as a
+readable block of text and `links` as a `label`/`url` list — no JS quoting/escaping
+to worry about. `index`/`scene` fields in the file are just labels for orientation;
+order in the file (not the `index` value) is what gets written back, and it must stay
+five entries. `apply` requires Node (`node`) and Python 3 with PyYAML (`pyyaml`).
+
+As always: after `apply`, re-export/rebuild `docs/index.html` (below) and actually
+load it in a browser before merging.
 
 ## Changing which objects are clickable
 

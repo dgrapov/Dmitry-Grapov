@@ -1,0 +1,95 @@
+# Digital Food Forest — site content template
+#
+# Edit this file, then regenerate the site with:
+#   scripts/sync-sections.sh apply
+#
+# Order matters: index 0-4 map to fixed objects in the 3D scene (see README.md).
+# `index` and `scene` below are for your reference only and are ignored on import
+# (order in this file is what counts) — do not reorder entries.
+
+- index: 0
+  scene: mushroom ring (front left) — Origin / about
+  kicker: MUSHROOM RING // ORIGIN
+  title: Cultivating signal from noise
+  body: |-
+    Ph.D. with 18+ years experience at the intersection of bio and digital technology. Leading AI/ML, data engineering, software engineering, DevOps and enterprise IT for synthetic biology. Non digital: trail running, mountain biking, hiking.
+  chips:
+  - Amyris
+  - Centene
+  - Bayer
+  - Monsanto
+  - CDS
+  links:
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/dmitrygrapov/
+  - label: Resume
+    url: https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw
+  - label: CV
+    url: https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA
+  - label: CDS
+    url: https://creative-data.science/
+- index: 1
+  scene: hollow in the right redwood — Code & science
+  kicker: THE HOLLOW // CODE, SCIENCE & PORTFOLIO
+  title: Open tools for messy data
+  body: |-
+    Metabolomics, network analysis, and machine learning pipelines grown into open software. Most-starred: MetaMapR and DeviumWeb, each built to make Omics data legible instead of opaque.
+  chips:
+  - MetaMapR
+  - DeviumWeb
+  - networkly
+  - CTSgetR
+  - TeachingDemos
+  links:
+  - label: GitHub
+    url: https://github.com/dgrapov
+  - label: MetaMapR
+    url: http://dgrapov.github.io/MetaMapR/
+  - label: DeviumWeb
+    url: http://dgrapov.github.io/DeviumWeb/
+  - label: networkly
+    url: http://dgrapov.github.io/networkly
+  - label: Scholar
+    url: https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en
+- index: 2
+  scene: slime mold on the floor — Teaching
+  kicker: SLIME MOLD // TEACHING
+  title: Knowledge spreads root to root
+  body: |-
+    Workshops, conference talks, and open tutorials on multivariate analysis, gene ontology, and network biology.
+  chips: []
+  links:
+  - label: Demos
+    url: https://github.com/dgrapov/TeachingDemos
+  - label: Slides
+    url: https://www.slideshare.net/dgrapov
+  - label: Video
+    url: https://www.youtube.com/user/dgrapov/videos
+- index: 3
+  scene: the crow (perched, flies between branches) — Writing & art
+  kicker: THE CROW // WRITING & ART
+  title: Beyond the dataframe
+  body: |-
+    Field notes on data science, programming, and machine learning, art and code.
+  chips: []
+  links:
+  - label: CDS Blog
+    url: https://creativedatasolutions.github.io/cds.blog/
+  - label: imDEV Blog
+    url: https://imdevsoftware.wordpress.com/
+  - label: Flickr
+    url: https://www.flickr.com/people/dgrapov/
+- index: 4
+  scene: the spring pool (right) — Contact
+  kicker: THE SPRING // CONTACT
+  title: To live is to grow
+  body: |-
+    Open to collaboration, consulting, and conversations about network graphs or trail routes.
+  chips: []
+  links:
+  - label: Email
+    url: mailto:dmitry@creative-data.solutions
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/dmitrygrapov/
+  - label: GitHub
+    url: https://github.com/dgrapov
