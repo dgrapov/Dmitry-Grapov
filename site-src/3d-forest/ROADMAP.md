@@ -54,8 +54,9 @@ time on slow phones as on fast laptops.
 
 **Phase 0: snapshot (done).** `docs/v1/` is a frozen copy of the current site.
 
-**Phase 1: quick wins (POC items 1–7, 9, 10).** Move them into
-`Dmitry Grapov Forest.dc.html`, then re-export `docs/index.html`. Also:
+**Phase 1: quick wins (POC items 1–7, 9, 10) — done.** They're in
+`Dmitry Grapov Forest.dc.html` and rebuilt into `docs/index.html` with
+`scripts/rebuild-docs.py`. The live source is the POC with `enablePast = false`. Also done:
 - **Bundle three.js and React locally.** The live site loads them from `unpkg.com` at
   runtime, so if unpkg is slow or blocked, the site renders nothing. Put
   them in `docs/vendor/` or inline them in the bundle.

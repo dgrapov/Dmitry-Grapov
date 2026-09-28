@@ -141,7 +141,9 @@
       <div style="font-family:'VT323',monospace;font-size:30px;color:#E4FFEE;margin:6px 0 12px">You've walked the whole forest.</div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
         <a class="hud-btn" href="mailto:dmitry@creative-data.solutions" style="text-decoration:none">Start a conversation</a>
-        <button class="hud-btn" onClick="{{ goPast }}">◂ See the growth rings</button>
+        <sc-if value="{{ enablePast }}" hint-placeholder-val="{{ true }}">
+          <button class="hud-btn" onClick="{{ goPast }}">◂ See the growth rings</button>
+        </sc-if>
       </div>
       <button class="hud-btn" aria-label="Dismiss" onClick="{{ dismissComplete }}" style="position:absolute;top:8px;right:8px;padding:0 7px 2px;font-size:15px">×</button>
     </div>
@@ -199,7 +201,13 @@ class Component extends DCLogic {
     { when: '—',    title: 'Creative Data Solutions', where: 'CONSULTING · TEACHING', note: 'Open-source tools, workshops and consulting in data science.', url: 'https://creative-data.science/' },
     { when: 'ROOT', title: 'Ph.D. & open science',  where: 'METABOLOMICS · NETWORKS',  note: 'MetaMapR, DeviumWeb, imDEV — making omics data legible.', url: 'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en' },
   ];
-  hints = ['CLICK THE GLOWING FORMS', '◂ LOOK LEFT INTO THE PAST', 'KEYS 1–5 · ← → · ESC'];
+  // Past/timeline view (stump + growth rings). Off on the live site until `rings` holds real data.
+  enablePast = true;
+  get hints() {
+    return this.enablePast
+      ? ['CLICK THE GLOWING FORMS', '◂ LOOK LEFT INTO THE PAST', 'KEYS 1–5 · ← → · ESC']
+      : ['CLICK THE GLOWING FORMS', 'OR OPEN ≡ INDEX', 'KEYS 1–5 · ESC'];
+  }
   labelRef = React.createRef();
   pastT = 0;       // 0 = forest, 1 = looking at the stump (eased per frame)
   focusT = 0;      // 0..1 camera glide toward the selected form
@@ -705,42 +713,45 @@ class Component extends DCLogic {
     // ---------------- the past: a felled redwood stump off to the left ----------------
     // Its top face shows one growth-ring band per timeline entry (outermost = most recent);
     // "◂ THE PAST" pans the camera here and the selected band lights up.
-    const ST = [-82, 18], SR = 14, SH = 5;
-    const nR = this.rings.length;
-    const bandOf = (d) => Math.min(nR - 1, Math.floor((1 - d / SR) * nR)); // 0 = outer
-    const stumpSide = [], bandCells = this.rings.map(() => []);
-    for (let x = -SR - 1; x <= SR + 1; x++) for (let z = -SR - 1; z <= SR + 1; z++) {
-      const d = Math.hypot(x, z) + Math.sin(Math.atan2(z, x) * 5) * 0.35; // slightly irregular trunk
-      if (d > SR + 0.5) continue;
-      if (d > SR - 1.2) { for (let y = 0; y <= SH; y++) stumpSide.push({ x: ST[0] + x, y, z: ST[1] + z, tone: 'bark', n: Math.random() }); continue; }
-      // each band ends in a thin dark "latewood" line, like a real ring boundary
-      const f = (1 - d / SR) * nR, edge = (f % 1) > 0.78;
-      bandCells[bandOf(d)].push({ x: ST[0] + x, y: SH, z: ST[1] + z, tone: 'wood', n: Math.random(), dark: edge });
+    let ringMeshes = [], stumpCenter = null, ringBase = [], ringLate = null;
+    if (this.enablePast) {
+      const ST = [-82, 18], SR = 14, SH = 5;
+      const nR = this.rings.length;
+      const bandOf = (d) => Math.min(nR - 1, Math.floor((1 - d / SR) * nR)); // 0 = outer
+      const stumpSide = [], bandCells = this.rings.map(() => []);
+      for (let x = -SR - 1; x <= SR + 1; x++) for (let z = -SR - 1; z <= SR + 1; z++) {
+        const d = Math.hypot(x, z) + Math.sin(Math.atan2(z, x) * 5) * 0.35; // slightly irregular trunk
+        if (d > SR + 0.5) continue;
+        if (d > SR - 1.2) { for (let y = 0; y <= SH; y++) stumpSide.push({ x: ST[0] + x, y, z: ST[1] + z, tone: 'bark', n: Math.random() }); continue; }
+        // each band ends in a thin dark "latewood" line, like a real ring boundary
+        const f = (1 - d / SR) * nR, edge = (f % 1) > 0.78;
+        bandCells[bandOf(d)].push({ x: ST[0] + x, y: SH, z: ST[1] + z, tone: 'wood', n: Math.random(), dark: edge });
+      }
+      // roots spilling out, and new growth from the old wood
+      for (let i = 0; i < 7; i++) {
+        const a = (i / 7) * Math.PI * 2 + R() * 0.5;
+        stumpSide.push(...this.line([ST[0] + Math.cos(a) * SR, 2, ST[1] + Math.sin(a) * SR], [ST[0] + Math.cos(a) * (SR + 6 + R() * 4), 0, ST[1] + Math.sin(a) * (SR + 6 + R() * 4)], 1, 'bark'));
+      }
+      const sprout = this.tuft(ST[0] + SR - 4, ST[1] - 4, 5, 'frond').map(c => ({ ...c, y: c.y + SH }))
+        .concat(this.frond(ST[0] - SR + 3, SH + 1, ST[1] + 3, 7, [0.7, 0.7], 'frond'));
+      scene.add(this.makeVox(THREE, stumpSide.concat(sprout), step, 0.95, toneColor));
+      ringBase = this.rings.map((_, i) => new THREE.Color(i % 2 ? '#24503C' : '#3A7259'));
+      ringLate = new THREE.Color('#0A1812');
+      ringMeshes = bandCells.map((cells, bi) => {
+        const lightCells = cells.filter(c => !c.dark), darkCells = cells.filter(c => c.dark);
+        const a = this.makeInst(THREE, lightCells, step, 0.95, toneColor, { unlit: true, forceColor: new THREE.Color(1, 1, 1) });
+        const b = this.makeInst(THREE, darkCells, step, 0.95, toneColor, { unlit: true, forceColor: new THREE.Color(1, 1, 1) });
+        a.material.color.copy(ringBase[bi]); b.material.color.copy(ringLate);
+        scene.add(a); scene.add(b);
+        return { a, b };
+      });
+      // a few dim old-growth trunks so the stump sits in the forest, not the void
+      scene.add(this.makeVox(THREE, [...this.column(-64, -8, 2, 46, 'bark', 1), ...this.column(-104, 2, 3, 52, 'bark', 1.2), ...this.column(-90, -24, 2, 44, 'bark', 1)], step, 0.95, toneColor));
+      const stumpLight = new THREE.PointLight(PALE, 0.6, 18, 2);
+      stumpLight.position.set(ST[0] * step, (SH + 6) * step, ST[1] * step);
+      scene.add(stumpLight);
+      stumpCenter = new THREE.Vector3(ST[0] * step, SH * step, ST[1] * step);
     }
-    // roots spilling out, and new growth from the old wood
-    for (let i = 0; i < 7; i++) {
-      const a = (i / 7) * Math.PI * 2 + R() * 0.5;
-      stumpSide.push(...this.line([ST[0] + Math.cos(a) * SR, 2, ST[1] + Math.sin(a) * SR], [ST[0] + Math.cos(a) * (SR + 6 + R() * 4), 0, ST[1] + Math.sin(a) * (SR + 6 + R() * 4)], 1, 'bark'));
-    }
-    const sprout = this.tuft(ST[0] + SR - 4, ST[1] - 4, 5, 'frond').map(c => ({ ...c, y: c.y + SH }))
-      .concat(this.frond(ST[0] - SR + 3, SH + 1, ST[1] + 3, 7, [0.7, 0.7], 'frond'));
-    scene.add(this.makeVox(THREE, stumpSide.concat(sprout), step, 0.95, toneColor));
-    const ringBase = this.rings.map((_, i) => new THREE.Color(i % 2 ? '#24503C' : '#3A7259'));
-    const ringLate = new THREE.Color('#0A1812');
-    const ringMeshes = bandCells.map((cells, bi) => {
-      const lightCells = cells.filter(c => !c.dark), darkCells = cells.filter(c => c.dark);
-      const a = this.makeInst(THREE, lightCells, step, 0.95, toneColor, { unlit: true, forceColor: new THREE.Color(1, 1, 1) });
-      const b = this.makeInst(THREE, darkCells, step, 0.95, toneColor, { unlit: true, forceColor: new THREE.Color(1, 1, 1) });
-      a.material.color.copy(ringBase[bi]); b.material.color.copy(ringLate);
-      scene.add(a); scene.add(b);
-      return { a, b };
-    });
-    // a few dim old-growth trunks so the stump sits in the forest, not the void
-    scene.add(this.makeVox(THREE, [...this.column(-64, -8, 2, 46, 'bark', 1), ...this.column(-104, 2, 3, 52, 'bark', 1.2), ...this.column(-90, -24, 2, 44, 'bark', 1)], step, 0.95, toneColor));
-    const stumpLight = new THREE.PointLight(PALE, 0.6, 18, 2);
-    stumpLight.position.set(ST[0] * step, (SH + 6) * step, ST[1] * step);
-    scene.add(stumpLight);
-    const stumpCenter = new THREE.Vector3(ST[0] * step, SH * step, ST[1] * step);
 
     // squirrel
     const sqCells = [
@@ -952,7 +963,7 @@ class Component extends DCLogic {
         const hi = this.openIndex < 0 && this.flyTo < 0 ? this.hoverIndex : -1;
         if (hi >= 0) {
           const hh = hotspots[hi], hc = hh.kind ? hh.group.position : hh.center;
-          tmpV.copy(hc); tmpV.y += hh.radius * 0.9 + 0.8; tmpV.project(camera);
+          tmpV.copy(hc); tmpV.y += hh.radius * 0.4 + 0.6; tmpV.project(camera);
           lab.style.left = ((tmpV.x + 1) / 2 * canvas.clientWidth) + 'px';
           lab.style.top = ((1 - tmpV.y) / 2 * canvas.clientHeight) + 'px';
           lab.textContent = this.sections[hi].kicker;
@@ -1339,6 +1350,7 @@ class Component extends DCLogic {
   }
 
   goPast() {
+    if (!this.enablePast) return;
     if (this.openIndex >= 0) this.closeModal();
     this.flyTo = -1;
     this.glitch(420);
@@ -1672,8 +1684,9 @@ class Component extends DCLogic {
       menuLabel: this.state.menuOpen ? '× CLOSE' : '≡ INDEX',
       toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
       menuItems: this.sections.map((s, i) => ({ label: `${s.kicker.split('//')[1].trim()}  ${i + 1}`, go: () => this.goTo(i) }))
-        .concat([{ label: 'GROWTH RINGS  ◂', go: () => this.goPast() }]),
-      showPastTab: !this.state.past && this.state.openIndex < 0,
+        .concat(this.enablePast ? [{ label: 'GROWTH RINGS  ◂', go: () => this.goPast() }] : []),
+      showPastTab: this.enablePast && !this.state.past && this.state.openIndex < 0,
+      enablePast: this.enablePast,
       goPast: () => this.goPast(),
       goPresent: () => this.goPresent(),
       pastReady: this.state.pastReady,

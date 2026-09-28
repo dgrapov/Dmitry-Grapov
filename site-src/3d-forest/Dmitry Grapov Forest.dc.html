@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dmitry Grapov — AI/ML & Data for Synthetic Biology</title>
+<meta name="description" content="Dmitry Grapov, Ph.D. — 18+ years leading AI/ML, data engineering and software for synthetic biology and life sciences. Explore an interactive voxel food forest: open-source tools (MetaMapR, DeviumWeb), teaching, writing and art.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dmitry Grapov — Digital Food Forest">
+<meta property="og:description" content="AI/ML, data engineering and open science for synthetic biology — explored as an interactive 3D forest.">
+<meta property="og:url" content="https://dgrapov.github.io/Dmitry-Grapov/">
+<meta property="og:image" content="https://dgrapov.github.io/Dmitry-Grapov/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -34,6 +42,13 @@
     @keyframes fx-blink{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
     @keyframes fx-scan{0%{transform:translateY(-12%)}100%{transform:translateY(112%)}}
     @keyframes fx-in{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+    @keyframes fx-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fx-fade{0%{opacity:0}12%{opacity:1}88%{opacity:1}100%{opacity:0}}
+    @keyframes fx-nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-4px)}}
+    .hud-btn{all:unset;cursor:pointer;font-family:'VT323',monospace;letter-spacing:0.12em;color:rgba(159,211,174,0.75);border:1px solid rgba(159,211,174,0.28);background:rgba(3,11,9,0.55);padding:4px 11px 6px;font-size:17px;transition:color .2s,background .2s,border-color .2s}
+    .hud-btn:hover,.hud-btn:focus-visible{color:#E4FFEE;background:rgba(159,211,174,0.12);border-color:rgba(159,211,174,0.6)}
+    .ring-row{all:unset;display:grid;grid-template-columns:44px 1fr;gap:12px;cursor:pointer;padding:10px 12px;border-left:2px solid rgba(159,211,174,0.14);opacity:0;animation:fx-rise 420ms ease-out forwards;transition:background .2s,border-color .2s}
+    .ring-row:hover,.ring-row:focus-visible,.ring-row[data-on="1"]{background:rgba(159,211,174,0.07);border-left-color:#9FD3AE}
     ::selection{background:#5F9EA0;color:#03110A}
     a{color:#9FD3AE}
     a:hover{color:#E4FFEE}
@@ -60,15 +75,79 @@
 
   <div style="position:absolute;top:26px;left:30px;pointer-events:none;font-family:'VT323',monospace;font-size:23px;letter-spacing:0.13em;color:rgba(159,211,174,0.72)">
     DMITRY_GRAPOV<span style="animation:fx-blink 1.4s step-end infinite">▍</span>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.28em;color:rgba(159,211,174,0.5);margin-top:4px">AI/ML · DATA · SYNTHETIC BIOLOGY</div>
   </div>
+
+  <!-- index menu: a fast, non-3D path to every section (also keys 1-5 / T / Esc) -->
+  <div style="position:absolute;top:{{ menuTop }};right:30px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:3">
+    <button class="hud-btn" onClick="{{ toggleMenu }}" aria-expanded="{{ menuOpen }}">{{ menuLabel }}</button>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:4px;animation:fx-rise 200ms ease-out;background:rgba(3,11,9,0.82);border:1px solid rgba(159,211,174,0.16);padding:8px">
+        <sc-for list="{{ menuItems }}" as="item" hint-placeholder-count="6">
+          <button class="hud-btn" style="font-size:16px;text-align:right;border-color:transparent" onClick="{{ item.go }}">{{ item.label }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- floating name tag over the hovered form, positioned per-frame from the 3D scene -->
+  <div ref="{{ labelRef }}" style="position:absolute;left:0;top:0;pointer-events:none;opacity:0;transition:opacity .18s;font-family:'VT323',monospace;font-size:19px;letter-spacing:0.14em;color:#E4FFEE;text-shadow:0 0 12px rgba(159,211,174,0.6);white-space:nowrap;transform:translate(-50%,-100%)"></div>
+
+  <!-- look left, into the past -->
+  <sc-if value="{{ showPastTab }}" hint-placeholder-val="{{ true }}">
+    <button class="hud-btn" onClick="{{ goPast }}" aria-label="Look into the past: timeline" style="position:absolute;left:18px;top:50%;margin-top:-16px;font-size:16px;letter-spacing:0.2em;animation:fx-nudge 2.6s ease-in-out infinite">◂ PAST</button>
+  </sc-if>
 
   <div style="position:absolute;bottom:28px;left:30px;pointer-events:none;display:flex;gap:7px;align-items:center">
     <sc-for list="{{ marks }}" as="mark" hint-placeholder-count="5">
       <span style="width:13px;height:5px;background:{{ mark.bg }};display:block"></span>
     </sc-for>
+    <span style="font-family:'VT323',monospace;font-size:15px;letter-spacing:0.16em;color:rgba(159,211,174,0.55);margin-left:6px">{{ foundLabel }}</span>
   </div>
 
-  <div style="position:absolute;bottom:26px;right:30px;pointer-events:none;font-family:'VT323',monospace;font-size:15px;letter-spacing:0.16em;color:rgba(159,211,174,0.3)">{{ hint }}</div>
+  <div style="position:absolute;bottom:26px;right:30px;pointer-events:none;font-family:'VT323',monospace;font-size:15px;letter-spacing:0.16em;color:rgba(159,211,174,0.55);text-align:right;max-width:60vw">
+    <span key="{{ hintKey }}" style="display:inline-block;animation:fx-fade 5s ease-in-out infinite">{{ hint }}</span>
+  </div>
+
+  <!-- growth-ring timeline: the stump to the left of the forest -->
+  <sc-if value="{{ pastReady }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ pastPanelStyle }}">
+      <div style="font-size:10px;letter-spacing:0.3em;color:rgba(95,158,160,0.95);animation:fx-rise 300ms ease-out">THE STUMP // GROWTH RINGS</div>
+      <div style="font-family:'VT323',monospace;font-size:clamp(28px,3.4vw,38px);line-height:1.05;color:#E4FFEE;margin:10px 0 6px;animation:fx-rise 380ms ease-out">Every ring a season</div>
+      <div style="font-size:12px;line-height:1.6;color:rgba(228,255,238,0.55);margin-bottom:14px;animation:fx-rise 440ms ease-out">Outer rings are recent. Select one to light it up in the wood.</div>
+      <div style="overflow:auto;display:flex;flex-direction:column;gap:2px;padding-right:6px">
+        <sc-for list="{{ ringRows }}" as="row" hint-placeholder-count="6">
+          <button class="ring-row" data-on="{{ row.on }}" style="animation-delay:{{ row.delay }}" onClick="{{ row.select }}" onMouseEnter="{{ row.select }}">
+            <span style="font-family:'VT323',monospace;font-size:20px;color:{{ row.color }};line-height:1.1">{{ row.when }}</span>
+            <span>
+              <span style="display:block;font-family:'VT323',monospace;font-size:20px;color:#E4FFEE;line-height:1.1">{{ row.title }}</span>
+              <span style="display:block;font-size:11px;letter-spacing:0.14em;color:rgba(95,158,160,0.95);margin:3px 0 4px">{{ row.where }}</span>
+              <span style="display:block;font-size:12px;line-height:1.55;color:rgba(228,255,238,0.66)">{{ row.note }}</span>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px">
+        <span style="font-size:10px;letter-spacing:0.2em;color:rgba(159,211,174,0.35)">{{ ringDraftNote }}</span>
+        <button class="hud-btn" onClick="{{ goPresent }}">PRESENT ▸</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- completion: every form discovered -->
+  <sc-if value="{{ showComplete }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:50%;top:22%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);text-align:center;pointer-events:auto;animation:fx-in 420ms ease-out;background:rgba(3,11,9,0.78);border:1px solid rgba(159,211,174,0.3);padding:18px 26px;box-shadow:0 0 60px rgba(95,158,160,0.18);z-index:2">
+      <div style="font-size:10px;letter-spacing:0.3em;color:rgba(95,158,160,0.95)">5 / 5 // FOREST MAPPED</div>
+      <div style="font-family:'VT323',monospace;font-size:30px;color:#E4FFEE;margin:6px 0 12px">You've walked the whole forest.</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="hud-btn" href="mailto:dmitry@creative-data.solutions" style="text-decoration:none">Start a conversation</a>
+        <sc-if value="{{ enablePast }}" hint-placeholder-val="{{ true }}">
+          <button class="hud-btn" onClick="{{ goPast }}">◂ See the growth rings</button>
+        </sc-if>
+      </div>
+      <button class="hud-btn" aria-label="Dismiss" onClick="{{ dismissComplete }}" style="position:absolute;top:8px;right:8px;padding:0 7px 2px;font-size:15px">×</button>
+    </div>
+  </sc-if>
 
   <sc-if value="{{ isOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:34px;background:rgba(2,7,6,0.66);backdrop-filter:blur(5px)">
@@ -109,7 +188,30 @@
   &quot;accentB&quot;: {&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#5F9EA0&quot;,&quot;options&quot;:[&quot;#5F9EA0&quot;,&quot;#6E9BC4&quot;,&quot;#6FAF8E&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Scene&quot;}
 }">
 class Component extends DCLogic {
-  state = { openIndex: -1, hoverIndex: -1, found: [] };
+  state = { openIndex: -1, hoverIndex: -1, found: [], menuOpen: false, past: false, pastReady: false, ringSel: 0, showComplete: false, hintIdx: 0 };
+
+  // Growth rings — the timeline behind "◂ THE PAST". Outermost (index 0) = most recent.
+  // DRAFT: order/wording inferred from the site's own copy; replace `when`/`note`
+  // with the real dates and highlights from the résumé/CV folder.
+  rings = [
+    { when: 'NOW',  title: 'Amyris',                where: 'SYNTHETIC BIOLOGY',       note: 'Leading AI/ML, data engineering, software engineering, DevOps and enterprise IT.', url: 'https://www.linkedin.com/in/dmitrygrapov/' },
+    { when: '—',    title: 'Centene',               where: 'HEALTHCARE DATA',          note: 'Data science and ML at enterprise scale.', url: '' },
+    { when: '—',    title: 'Bayer',                 where: 'CROP SCIENCE',             note: 'Data science for R&D pipelines after the Monsanto integration.', url: '' },
+    { when: '—',    title: 'Monsanto',              where: 'AG BIOTECH',               note: 'Machine learning and analytics for plant biology.', url: '' },
+    { when: '—',    title: 'Creative Data Solutions', where: 'CONSULTING · TEACHING', note: 'Open-source tools, workshops and consulting in data science.', url: 'https://creative-data.science/' },
+    { when: 'ROOT', title: 'Ph.D. & open science',  where: 'METABOLOMICS · NETWORKS',  note: 'MetaMapR, DeviumWeb, imDEV — making omics data legible.', url: 'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en' },
+  ];
+  // Past/timeline view (stump + growth rings). Off on the live site until `rings` holds real data.
+  enablePast = false;
+  get hints() {
+    return this.enablePast
+      ? ['CLICK THE GLOWING FORMS', '◂ LOOK LEFT INTO THE PAST', 'KEYS 1–5 · ← → · ESC']
+      : ['CLICK THE GLOWING FORMS', 'OR OPEN ≡ INDEX', 'KEYS 1–5 · ESC'];
+  }
+  labelRef = React.createRef();
+  pastT = 0;       // 0 = forest, 1 = looking at the stump (eased per frame)
+  focusT = 0;      // 0..1 camera glide toward the selected form
+  flyTo = -1;      // hotspot the camera is gliding to before its panel opens
 
   sections = [
     { kicker:'MUSHROOM RING // ORIGIN', title:'Cultivating signal from noise', body:'Ph.D. with 18+ years experience at the intersection of bio and digital technology. Leading AI/ML, data engineering, software engineering, DevOps and enterprise IT for synthetic biology. Non digital: trail running, mountain biking, hiking.', chips:['Amyris','Centene','Bayer','Monsanto','CDS'], links:[{label: 'LinkedIn', url: 'https://www.linkedin.com/in/dmitrygrapov/'},{label: 'Resume', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw'},{label: 'CV', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA'},{label: 'CDS', url: 'https://creative-data.science/'}] },
@@ -130,10 +232,17 @@ class Component extends DCLogic {
   lastMicro = 0;
   camZoom = 1; // >1 on narrow/portrait screens; recomputed in onResize()
 
-  componentDidMount() { this.setup(); }
+  componentDidMount() {
+    this.setup();
+    this.onKey = this.onKey.bind(this);
+    window.addEventListener('keydown', this.onKey);
+    this.hintTimer = setInterval(() => this.setState(s => ({ hintIdx: s.hintIdx + 1 })), 5000);
+  }
   componentWillUnmount() {
     if (this.rafId) cancelAnimationFrame(this.rafId);
     window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('keydown', this.onKey);
+    clearInterval(this.hintTimer);
     if (this.three) this.three.renderer.dispose();
   }
   componentDidUpdate() {
@@ -601,6 +710,49 @@ class Component extends DCLogic {
     }
     addHotspot(pool, ACC_B, [pc[0], 2, pc[1]], motifs[4]);
 
+    // ---------------- the past: a felled redwood stump off to the left ----------------
+    // Its top face shows one growth-ring band per timeline entry (outermost = most recent);
+    // "◂ THE PAST" pans the camera here and the selected band lights up.
+    let ringMeshes = [], stumpCenter = null, ringBase = [], ringLate = null;
+    if (this.enablePast) {
+      const ST = [-82, 18], SR = 14, SH = 5;
+      const nR = this.rings.length;
+      const bandOf = (d) => Math.min(nR - 1, Math.floor((1 - d / SR) * nR)); // 0 = outer
+      const stumpSide = [], bandCells = this.rings.map(() => []);
+      for (let x = -SR - 1; x <= SR + 1; x++) for (let z = -SR - 1; z <= SR + 1; z++) {
+        const d = Math.hypot(x, z) + Math.sin(Math.atan2(z, x) * 5) * 0.35; // slightly irregular trunk
+        if (d > SR + 0.5) continue;
+        if (d > SR - 1.2) { for (let y = 0; y <= SH; y++) stumpSide.push({ x: ST[0] + x, y, z: ST[1] + z, tone: 'bark', n: Math.random() }); continue; }
+        // each band ends in a thin dark "latewood" line, like a real ring boundary
+        const f = (1 - d / SR) * nR, edge = (f % 1) > 0.78;
+        bandCells[bandOf(d)].push({ x: ST[0] + x, y: SH, z: ST[1] + z, tone: 'wood', n: Math.random(), dark: edge });
+      }
+      // roots spilling out, and new growth from the old wood
+      for (let i = 0; i < 7; i++) {
+        const a = (i / 7) * Math.PI * 2 + R() * 0.5;
+        stumpSide.push(...this.line([ST[0] + Math.cos(a) * SR, 2, ST[1] + Math.sin(a) * SR], [ST[0] + Math.cos(a) * (SR + 6 + R() * 4), 0, ST[1] + Math.sin(a) * (SR + 6 + R() * 4)], 1, 'bark'));
+      }
+      const sprout = this.tuft(ST[0] + SR - 4, ST[1] - 4, 5, 'frond').map(c => ({ ...c, y: c.y + SH }))
+        .concat(this.frond(ST[0] - SR + 3, SH + 1, ST[1] + 3, 7, [0.7, 0.7], 'frond'));
+      scene.add(this.makeVox(THREE, stumpSide.concat(sprout), step, 0.95, toneColor));
+      ringBase = this.rings.map((_, i) => new THREE.Color(i % 2 ? '#24503C' : '#3A7259'));
+      ringLate = new THREE.Color('#0A1812');
+      ringMeshes = bandCells.map((cells, bi) => {
+        const lightCells = cells.filter(c => !c.dark), darkCells = cells.filter(c => c.dark);
+        const a = this.makeInst(THREE, lightCells, step, 0.95, toneColor, { unlit: true, forceColor: new THREE.Color(1, 1, 1) });
+        const b = this.makeInst(THREE, darkCells, step, 0.95, toneColor, { unlit: true, forceColor: new THREE.Color(1, 1, 1) });
+        a.material.color.copy(ringBase[bi]); b.material.color.copy(ringLate);
+        scene.add(a); scene.add(b);
+        return { a, b };
+      });
+      // a few dim old-growth trunks so the stump sits in the forest, not the void
+      scene.add(this.makeVox(THREE, [...this.column(-64, -8, 2, 46, 'bark', 1), ...this.column(-104, 2, 3, 52, 'bark', 1.2), ...this.column(-90, -24, 2, 44, 'bark', 1)], step, 0.95, toneColor));
+      const stumpLight = new THREE.PointLight(PALE, 0.6, 18, 2);
+      stumpLight.position.set(ST[0] * step, (SH + 6) * step, ST[1] * step);
+      scene.add(stumpLight);
+      stumpCenter = new THREE.Vector3(ST[0] * step, SH * step, ST[1] * step);
+    }
+
     // squirrel
     const sqCells = [
       ...this.blob(0, 0, 0, 1.9, 'sq', 0.98),
@@ -727,7 +879,9 @@ class Component extends DCLogic {
 
     camera.position.set(10, 8.5, 23);
     camera.lookAt(0, 6, 0);
-    this.three = { THREE, scene, camera, renderer, hotspots, squirrel, spos, sgeo, SP, smpos, smgeo, SM, smmat, shmat, bpos, bgeo, MAX, step };
+    this.three = { THREE, scene, camera, renderer, hotspots, squirrel, spos, sgeo, SP, smpos, smgeo, SM, smmat, shmat, bpos, bgeo, MAX, step, ringMeshes, stumpCenter };
+    const camBase = new THREE.Vector3(), camLook = new THREE.Vector3(), tmpV = new THREE.Vector3();
+    const ringHot = new THREE.Color('#E4FFEE');
 
     this.onResize = this.onResize.bind(this);
     window.addEventListener('resize', this.onResize);
@@ -746,6 +900,8 @@ class Component extends DCLogic {
     const loop = () => {
       this.rafId = requestAnimationFrame(loop);
       const t = clock.getElapsedTime();
+      const dt = Math.min(0.25, t - (this.lastT ?? t)); this.lastT = t;
+      const ease = (rate) => 1 - Math.exp(-dt * rate); // frame-rate independent easing
 
       // the scene takes turns featuring each interactive form
       const SPOT = 7.5;
@@ -759,9 +915,61 @@ class Component extends DCLogic {
       this.parallax.y += (this.parallax.ty - this.parallax.y) * 0.05;
       const bias = attn * 0.2;
       const cz = this.camZoom;
-      camera.position.set(10 * cz + this.parallax.x * 2.4 + fCenter.x * bias * 0.3, 8.5 * cz + this.parallax.y * 1.6 + (fCenter.y - 6) * bias * 0.25, 23 * cz - Math.abs(this.parallax.x) * 0.7);
-      camera.lookAt(this.parallax.x * 1.0 + fCenter.x * bias, 6 + this.parallax.y * 0.55 + (fCenter.y - 6) * bias * 0.4, fCenter.z * bias * 0.5);
-      camera.rotation.z = this.parallax.x * 0.01;
+      camBase.set(10 * cz + this.parallax.x * 2.4 + fCenter.x * bias * 0.3, 8.5 * cz + this.parallax.y * 1.6 + (fCenter.y - 6) * bias * 0.25, 23 * cz - Math.abs(this.parallax.x) * 0.7);
+      camLook.set(this.parallax.x * 1.0 + fCenter.x * bias, 6 + this.parallax.y * 0.55 + (fCenter.y - 6) * bias * 0.4, fCenter.z * bias * 0.5);
+
+      // glide toward the chosen form before its panel opens (and hold while it's open)
+      const want = this.flyTo >= 0 ? this.flyTo : this.openIndex;
+      this.focusT += ((want >= 0 ? 1 : 0) - this.focusT) * ease(4.4);
+      if (want >= 0) this.focusIdx = want;
+      if (this.focusT > 0.002 && this.focusIdx != null) {
+        const fh2 = hotspots[this.focusIdx];
+        const fc = fh2.kind ? fh2.group.position : fh2.center;
+        const e = this.focusT * this.focusT * (3 - 2 * this.focusT);
+        tmpV.copy(camBase).sub(fc).normalize().multiplyScalar(Math.max(7, fh2.radius * 2.6 + 5)).add(fc);
+        tmpV.y += 1.2;
+        camBase.lerp(tmpV, e * 0.62);
+        camLook.lerp(fc, e);
+      }
+      if (this.flyTo >= 0 && this.focusT > 0.82) { const i = this.flyTo; this.flyTo = -1; this.openSection(i); }
+
+      // look left, into the past: pan across to the stump
+      this.pastT += ((this.state.past ? 1 : 0) - this.pastT) * ease(2.2);
+      const pe = this.pastT * this.pastT * (3 - 2 * this.pastT);
+      if (pe > 0.001) {
+        const sc2 = this.three.stumpCenter, narrow = this.camZoom > 1.05;
+        tmpV.set(sc2.x + 15 + this.parallax.x * 1.5, 11 + this.parallax.y, sc2.z + (narrow ? 30 : 17));
+        camBase.lerp(tmpV, pe);
+        tmpV.set(sc2.x + (narrow ? 0 : 5), sc2.y - (narrow ? 9 : 0.5), sc2.z);
+        camLook.lerp(tmpV, pe);
+      }
+      if (this.state.past && !this.state.pastReady && this.pastT > 0.82) this.setState({ pastReady: true });
+
+      camera.position.copy(camBase);
+      camera.lookAt(camLook);
+      camera.rotation.z = this.parallax.x * 0.01 * (1 - pe);
+
+      // growth-ring highlight
+      this.three.ringMeshes.forEach((m, i) => {
+        const on = i === this.state.ringSel && pe > 0.5;
+        const k = on ? 0.55 + Math.sin(t * 3) * 0.2 : 0;
+        m.a.material.color.copy(ringBase[i]).lerp(ringHot, k);
+        m.b.material.color.copy(ringLate).lerp(ringHot, k * 0.35);
+      });
+
+      // name tag over the hovered form
+      const lab = this.labelRef.current;
+      if (lab) {
+        const hi = this.openIndex < 0 && this.flyTo < 0 ? this.hoverIndex : -1;
+        if (hi >= 0) {
+          const hh = hotspots[hi], hc = hh.kind ? hh.group.position : hh.center;
+          tmpV.copy(hc); tmpV.y += hh.radius * 0.4 + 0.6; tmpV.project(camera);
+          lab.style.left = ((tmpV.x + 1) / 2 * canvas.clientWidth) + 'px';
+          lab.style.top = ((1 - tmpV.y) / 2 * canvas.clientHeight) + 'px';
+          lab.textContent = this.sections[hi].kicker;
+          lab.style.opacity = '1';
+        } else lab.style.opacity = '0';
+      }
 
       hotspots.forEach(h => {
         const active = h.index === this.hoverIndex || h.index === this.openIndex;
@@ -781,10 +989,12 @@ class Component extends DCLogic {
         h.outline.position.set(gl.ox, gl.oy, 0);
         h.outline.scale.setScalar(gl.s);
         h.outline.material.opacity = gl.o * (0.8 + breathe * 0.25);
-        h.light.intensity = active ? 2.4 : 0.45 + feat * 1.3 + breathe * 0.3;
+        // undiscovered forms send out a slow beacon pulse so first-time visitors know where to look
+        const beacon = this.found.has(h.index) ? 0 : Math.pow(Math.max(0, Math.sin(t * 1.1 - h.index * 1.25)), 14);
+        h.light.intensity = active ? 2.4 : 0.45 + feat * 1.3 + breathe * 0.3 + beacon * 2.2;
         h.halo.quaternion.copy(camera.quaternion);
         h.halo.rotateZ(t * (active ? 0.32 : 0.06) + h.index);
-        h.halo.mat.opacity = active ? 0.3 : 0.03 + feat * 0.2 + breathe * 0.03;
+        h.halo.mat.opacity = active ? 0.3 : 0.03 + feat * 0.2 + breathe * 0.03 + beacon * 0.3;
         // plasma wisp
         const c = h.kind ? h.group.position : h.center;
         for (let i = 0; i < h.WN; i++) {
@@ -1084,7 +1294,7 @@ class Component extends DCLogic {
         if (d > 42 && now - this.lastMicro > 520) { this.lastMicro = now; this.glitch(120, true); }
       }
       lastPos = { x: e.clientX, y: e.clientY };
-      if (this.openIndex >= 0) return;
+      if (this.openIndex >= 0 || this.flyTo >= 0 || this.state.past) return;
       if (now - (this.lastPick || 0) < 55) return;
       this.lastPick = now;
       const idx = pick(e);
@@ -1094,14 +1304,21 @@ class Component extends DCLogic {
         this.setState({ hoverIndex: idx });
       }
     });
+    let down = null;
     canvas.addEventListener('pointerdown', (e) => {
-      if (this.openIndex >= 0) return;
+      down = { x: e.clientX, y: e.clientY };
+      if (this.openIndex >= 0 || this.flyTo >= 0 || this.state.past) return;
       const idx = pick(e);
       if (idx < 0) return;
-      this.openIndex = idx; this.hoverIndex = -1;
-      this.found.add(idx);
-      this.glitch(380);
-      this.setState({ openIndex: idx, hoverIndex: -1, found: [...this.found] });
+      this.goTo(idx);
+    });
+    // horizontal swipe on touch screens: swipe right = look left into the past, swipe left = back
+    canvas.addEventListener('pointerup', (e) => {
+      if (!down || e.pointerType !== 'touch') return;
+      const dx = e.clientX - down.x, dy = e.clientY - down.y;
+      down = null;
+      if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.5 || this.openIndex >= 0) return;
+      if (dx > 0) this.goPast(); else this.goPresent();
     });
     canvas.addEventListener('pointerleave', () => {
       this.parallax.tx = 0; this.parallax.ty = 0;
@@ -1109,10 +1326,61 @@ class Component extends DCLogic {
     });
   }
 
+  // glide to a form, then open its panel (the render loop calls openSection when the camera arrives)
+  goTo(idx) {
+    if (this.state.past) this.setState({ past: false, pastReady: false });
+    this.hoverIndex = -1;
+    this.flyTo = idx;
+    this.glitch(200, true);
+    this.setState({ hoverIndex: -1, menuOpen: false });
+  }
+  openSection(idx) {
+    this.openIndex = idx;
+    this.found.add(idx);
+    this.glitch(380);
+    this.setState({ openIndex: idx, found: [...this.found] });
+  }
+
   closeModal() {
     this.openIndex = -1; this.net = null;
     this.glitch(260);
-    this.setState({ openIndex: -1 });
+    const done = this.found.size >= this.sections.length && !this.completeShown;
+    if (done) this.completeShown = true;
+    this.setState({ openIndex: -1, showComplete: done || this.state.showComplete });
+  }
+
+  goPast() {
+    if (!this.enablePast) return;
+    if (this.openIndex >= 0) this.closeModal();
+    this.flyTo = -1;
+    this.glitch(420);
+    this.setState({ past: true, pastReady: false, menuOpen: false, showComplete: false, hoverIndex: -1 });
+  }
+  goPresent() {
+    if (!this.state.past) return;
+    this.glitch(420);
+    this.setState({ past: false, pastReady: false });
+  }
+
+  onKey(e) {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    const k = e.key;
+    if (k === 'Escape') {
+      if (this.openIndex >= 0) this.closeModal();
+      else if (this.state.past) this.goPresent();
+      else this.setState({ menuOpen: false, showComplete: false });
+    } else if (k >= '1' && k <= String(this.sections.length)) {
+      if (this.openIndex >= 0) this.closeModal();
+      this.goTo(Number(k) - 1);
+    } else if (k === 'ArrowLeft' || k === 't' || k === 'T') {
+      this.goPast();
+    } else if (k === 'ArrowRight') {
+      this.goPresent();
+    } else if (this.state.past && (k === 'ArrowUp' || k === 'ArrowDown')) {
+      e.preventDefault();
+      const n = this.rings.length;
+      this.setState(s => ({ ringSel: (s.ringSel + (k === 'ArrowDown' ? 1 : n - 1)) % n }));
+    }
   }
 
   initNet() {
@@ -1404,10 +1672,37 @@ class Component extends DCLogic {
       netCanvasRef: this.netCanvasRef,
       cursor: this.state.hoverIndex >= 0 ? 'pointer' : 'crosshair',
       marks: this.sections.map((_, i) => ({ bg: this.state.found.includes(i) ? 'rgba(159,211,174,0.85)' : 'rgba(159,211,174,0.14)' })),
-      hint: this.state.hoverIndex >= 0 ? '◆' : (this.state.found.length >= 5 ? '' : '· · ·'),
+      hint: this.state.pastReady ? '' : this.state.past ? '↑ ↓ RINGS · → OR ESC TO RETURN' : this.state.hoverIndex >= 0 ? 'CLICK TO ENTER' : this.hints[this.state.hintIdx % this.hints.length],
+      hintKey: 'h' + this.state.hintIdx + (this.state.past ? 'p' : '') + (this.state.hoverIndex >= 0 ? 'o' : ''),
+      foundLabel: `${this.state.found.length}/${this.sections.length} FOUND`,
       isOpen: this.state.openIndex >= 0,
       open: { ...open, hasChips: open.chips.length > 0 },
       closeModal: () => this.closeModal(),
+      labelRef: this.labelRef,
+      menuOpen: this.state.menuOpen,
+      menuTop: this.camZoom > 1.05 ? '84px' : '24px',
+      menuLabel: this.state.menuOpen ? '× CLOSE' : '≡ INDEX',
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      menuItems: this.sections.map((s, i) => ({ label: `${s.kicker.split('//')[1].trim()}  ${i + 1}`, go: () => this.goTo(i) }))
+        .concat(this.enablePast ? [{ label: 'GROWTH RINGS  ◂', go: () => this.goPast() }] : []),
+      showPastTab: this.enablePast && !this.state.past && this.state.openIndex < 0,
+      enablePast: this.enablePast,
+      goPast: () => this.goPast(),
+      goPresent: () => this.goPresent(),
+      pastReady: this.state.pastReady,
+      pastPanelStyle: (this.camZoom > 1.05
+        ? 'position:absolute;left:0;right:0;bottom:0;max-height:54%;display:flex;flex-direction:column;padding:22px 18px 18px;background:linear-gradient(180deg,rgba(3,7,6,0),rgba(3,7,6,0.92) 14%);z-index:2'
+        : 'position:absolute;top:0;right:0;bottom:0;width:min(440px,100%);display:flex;flex-direction:column;padding:78px 26px 26px;background:linear-gradient(90deg,rgba(3,7,6,0),rgba(3,7,6,0.88) 22%);z-index:2'),
+      ringRows: this.rings.map((r, i) => ({
+        ...r,
+        on: i === this.state.ringSel ? '1' : '0',
+        color: i === this.state.ringSel ? '#E4FFEE' : 'rgba(159,211,174,0.55)',
+        delay: `${120 + i * 70}ms`,
+        select: () => { if (this.state.ringSel !== i) this.setState({ ringSel: i }); },
+      })),
+      ringDraftNote: 'DRAFT DATES · SEE RÉSUMÉ',
+      showComplete: this.state.showComplete,
+      dismissComplete: () => this.setState({ showComplete: false }),
     };
   }
 }

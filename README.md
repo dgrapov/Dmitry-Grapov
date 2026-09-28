@@ -49,9 +49,12 @@ voxel geometry, ambient creature behavior, color themes) — see
 the `addHotspot` registration, the shared voxel-primitive helpers, and the
 exposed `seed` / `pixelSize` / `accentA` / `accentB` props.
 
-**Regenerating `docs/index.html` by hand** (rather than through the
-authoring tool) — read [the sharp edge below](#a-sharp-edge-if-you-ever-hand-edit-docsindexhtml-directly)
-first; it's a real, non-obvious way to silently corrupt the file.
+**Regenerating `docs/index.html`** without the authoring tool: run
+`python3 site-src/3d-forest/scripts/rebuild-docs.py`. It splices the current
+`Dmitry Grapov Forest.dc.html` (markup, logic, page styles, `<title>`/`<meta>`)
+into the existing bundle, embeds three.js from `site-src/3d-forest/vendor/`,
+and handles [the sharp edge below](#a-sharp-edge-if-you-ever-hand-edit-docsindexhtml-directly)
+for you. Then render it in a browser before merging.
 
 **Contributing / deploying changes**: this repo treats `master` as the live
 site — push feature branches and open a PR rather than committing straight
@@ -64,8 +67,8 @@ automatically.
 
 All copy — including links — lives in the `sections` array near the top of the
 logic block in `site-src/3d-forest/Dmitry Grapov Forest.dc.html`. See that folder's
-README for the full guide. After editing, re-export/rebuild to a self-contained file
-and replace `docs/index.html`.
+README for the full guide. After editing, rebuild `docs/index.html` with
+`python3 site-src/3d-forest/scripts/rebuild-docs.py`.
 
 ## Deploying
 
@@ -98,7 +101,7 @@ instead of biochemistry.
 
 ## Technology
 
-`docs/index.html` is a **single self-contained file** (~570 KB) — no server,
+`docs/index.html` is a **single self-contained file** (~810 KB) — no server,
 no build step, no external requests at runtime, works offline straight off
 disk or from any static host.
 
@@ -116,6 +119,11 @@ disk or from any static host.
 - **UI/content layer**: React (UMD build), driving the hotspot panels —
   `Component.sections` is the single array holding every bit of copy and
   every link on the site (see [Editing content](#editing-content-links-bio-sections)).
+- **Navigation**: click a form (the camera glides to it first), the **≡ INDEX**
+  menu, or keys `1–5` / `Esc`. Undiscovered forms pulse, hovering shows a name
+  tag, and finding all five offers a contact button. A "◂ look into the past"
+  growth-ring timeline is built but switched off (`enablePast = false`) until it
+  has real dates; see [`ROADMAP.md`](site-src/3d-forest/ROADMAP.md) and `/poc/`.
 - **Packaging**: everything — React, ReactDOM, Three.js, all fonts — is
   embedded as base64 (gzip-compressed where it helps) inside a
   `<script type="__bundler/manifest">` block. On load, a small bootstrap
