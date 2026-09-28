@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dmitry Grapov — AI/ML & Data for Synthetic Biology</title>
-<meta name="description" content="Dmitry Grapov, Ph.D. — 18+ years leading AI/ML, data engineering and software for synthetic biology and life sciences. Explore an interactive voxel food forest: open-source tools (MetaMapR, DeviumWeb), teaching, writing and art.">
+<meta name="description" content="Dmitry Grapov, Ph.D. — 18+ years leading AI/ML, data engineering and software for synthetic biology and life sciences. Explore an interactive voxel food forest: open-source tools (MetaMapR, DeviumWeb), teaching, writing, and a growth-ring timeline.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Dmitry Grapov — Digital Food Forest">
 <meta property="og:description" content="AI/ML, data engineering and open science for synthetic biology — explored as an interactive 3D forest.">
@@ -202,7 +202,7 @@ class Component extends DCLogic {
     { when: 'ROOT', title: 'Ph.D. & open science',  where: 'METABOLOMICS · NETWORKS',  note: 'MetaMapR, DeviumWeb, imDEV — making omics data legible.', url: 'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en' },
   ];
   // Past/timeline view (stump + growth rings). Off on the live site until `rings` holds real data.
-  enablePast = false;
+  enablePast = true;
   get hints() {
     return this.enablePast
       ? ['CLICK THE GLOWING FORMS', '◂ LOOK LEFT INTO THE PAST', 'KEYS 1–5 · ← → · ESC']

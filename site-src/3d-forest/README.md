@@ -10,7 +10,10 @@ a resident animation and one of the five clickable items.
 | File | What it is |
 |---|---|
 | `Dmitry Grapov Forest.dc.html` | **The source you edit.** Markup + logic in one file. |
-| `dist/index.html` | Self-contained build (no dependencies) — this is what you deploy. |
+| `Dmitry Grapov Forest POC.dc.html` | Same scene with the past/timeline view switched on (`enablePast = true`); served at `/poc/` via `docs/poc/`. |
+| `../../docs/index.html` | Self-contained build (no dependencies) — this is what GitHub Pages serves. Rebuild with `scripts/rebuild-docs.py`. |
+| `vendor/` | three.js r160 (MIT, license alongside), embedded into the build so the site makes no runtime CDN requests. |
+| `ROADMAP.md` | Plan for the story/timeline work, with POC screenshots in `poc-screens/`. |
 | `Dmitry Grapov Portfolio Pixel.dc.html` | Earlier variation: chunky pixel hologram tree, orbitable. |
 | `Dmitry Grapov Portfolio.dc.html` | Earliest variation: scroll-through tunnel of nodes. |
 | `support.js`, `_ds/` | Runtime + design-system assets used by the `.dc.html` sources. |
@@ -93,11 +96,11 @@ set a specific number to lock a layout you like. `pixelSize` raises/lowers rende
 
 Free GitHub Pages serves static files only — which is all this is.
 
-1. Copy `dist/index.html` to the root of your Pages repo (or into `/docs`).
+1. Run `python3 scripts/rebuild-docs.py` — it rewrites `docs/index.html` from the source.
 2. Settings → Pages → deploy from branch, root or `/docs`.
 3. Done. No build step, no server. The scene is one file, ~570 KB, works offline.
 
-Re-export after any content edit: the build in `dist/` is a snapshot, not a live link to the source.
+Rebuild after any content edit: `docs/index.html` is a snapshot, not a live link to the source.
 
 ## Performance notes
 
