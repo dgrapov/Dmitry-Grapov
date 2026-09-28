@@ -1,0 +1,7 @@
+/* DMTree Wellness and Healing Arts — Design System Entry Point */
+/* This file imports all design tokens. Link this single file from any consumer. */
+
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/shadows.css';

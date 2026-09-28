@@ -6,7 +6,12 @@ Live at **https://dgrapov.github.io/Dmitry-Grapov/** via GitHub Pages (branch `m
 
 - **`docs/index.html`** — the deployed site. A self-contained, single-file interactive
   3D voxel scene ("Digital Food Forest") — no build step, no server, works offline.
-  This is the only file GitHub Pages serves.
+  This is the page GitHub Pages serves at the site root.
+- **`docs/v1/`** — frozen snapshot of the site before the story/timeline work
+  (served at `/Dmitry-Grapov/v1/`).
+- **`docs/poc/`** — proof of concept for the next iteration: onboarding hints, hover
+  labels, camera glides, an index menu with keyboard nav, and a "◂ look into the past"
+  growth-ring timeline. See [`site-src/3d-forest/ROADMAP.md`](site-src/3d-forest/ROADMAP.md).
 - **`site-src/3d-forest/`** — editable source for the scene above, plus two earlier
   design variations (pixel hologram tree, scroll tunnel). See
   [`site-src/3d-forest/README.md`](site-src/3d-forest/README.md) for how to edit
