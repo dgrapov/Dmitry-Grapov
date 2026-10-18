@@ -34,21 +34,22 @@
   title: Open tools for messy data
   body: |-
     Metabolomics, network analysis, and machine learning pipelines grown into open software. Most-starred: MetaMapR and DeviumWeb, each built to make Omics data legible instead of opaque.
-  chips:
-  - MetaMapR
-  - DeviumWeb
-  - networkly
-  - CTSgetR
-  - TeachingDemos
+  chips: []
   links:
   - label: GitHub
     url: https://github.com/dgrapov
   - label: MetaMapR
     url: http://dgrapov.github.io/MetaMapR/
-  - label: DeviumWeb
-    url: http://dgrapov.github.io/DeviumWeb/
   - label: networkly
     url: http://dgrapov.github.io/networkly
+  - label: CTSgetR
+    url: https://github.com/dgrapov/CTSgetR
+  - label: TeachingDemos
+    url: https://github.com/dgrapov/TeachingDemos
+  - label: imDEV
+    url: https://sourceforge.net/projects/imdev/
+  - label: DAVE
+    url: https://creative-data.science/dave/
   - label: Scholar
     url: https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en
 - index: 2
