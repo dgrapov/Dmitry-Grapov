@@ -19,7 +19,8 @@
   - Bayer
   - Monsanto
   - WHNRC-USDA
-  - CDS
+  - label: CDS
+    url: https://creative-data.science/
   links:
   - label: LinkedIn
     url: https://www.linkedin.com/in/dmitrygrapov/
@@ -27,8 +28,6 @@
     url: https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw
   - label: CV
     url: https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA
-  - label: CDS
-    url: https://creative-data.science/
 - index: 1
   scene: hollow in the right redwood — Code & science
   kicker: THE HOLLOW // CODE, SCIENCE & PORTFOLIO

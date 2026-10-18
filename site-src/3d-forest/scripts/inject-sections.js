@@ -27,13 +27,16 @@ function jsString(str) {
   const escaped = str.replace(/\\/g, '\\\\').replace(new RegExp(q, 'g'), '\\' + q);
   return q + escaped + q;
 }
-function jsArray(arr) { return '[' + arr.map(jsString).join(',') + ']'; }
+// Chips are plain strings, or {label, url} for a chip that links somewhere.
+function jsChips(arr) {
+  return '[' + arr.map(c => typeof c === 'string' ? jsString(c) : `{label: ${jsString(c.label)}, url: ${jsString(c.url)}}`).join(',') + ']';
+}
 function jsLinks(links) {
   return '[' + links.map(l => `{label: ${jsString(l.label)}, url: ${jsString(l.url)}}`).join(',') + ']';
 }
 
 const lines = sections.map(s =>
-  `    { kicker:${jsString(s.kicker)}, title:${jsString(s.title)}, body:${jsString(s.body)}, chips:${jsArray(s.chips)}, links:${jsLinks(s.links)} },`
+  `    { kicker:${jsString(s.kicker)}, title:${jsString(s.title)}, body:${jsString(s.body)}, chips:${jsChips(s.chips)}, links:${jsLinks(s.links)} },`
 );
 const newArrText = 'sections = [\n' + lines.join('\n') + '\n  ];';
 
