@@ -47,7 +47,9 @@ Each entry:
 
 Notes
 - Keep `body` to roughly 40–90 words; the panel is fixed-width and long copy pushes the links down.
-- `chips` are for project/tool names. An empty array removes the row entirely.
+- `chips` are for project/tool names. An empty array removes the row entirely. A chip can
+  also be `{label, url}` (in `sections.yml`: `- label: CDS` + `url: ...`) to render it as a
+  highlighted link.
 - `links` render as bordered buttons in order; 1–3 works best. `mailto:` links are fine.
 - Don't rename the keys, and keep exactly five entries unless you also change the scene (below).
 

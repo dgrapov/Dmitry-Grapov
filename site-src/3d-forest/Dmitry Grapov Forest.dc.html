@@ -150,20 +150,24 @@
   </sc-if>
 
   <sc-if value="{{ isOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:34px;background:rgba(2,7,6,0.66);backdrop-filter:blur(5px)">
-      <div style="position:relative;width:100%;max-width:700px;animation:fx-in 240ms ease-out">
+    <div style="position:absolute;inset:0;display:flex;align-items:safe center;justify-content:center;overflow-y:auto;padding:34px 34px 108px;background:rgba(2,7,6,0.66);backdrop-filter:blur(5px)">
+      <div style="position:relative;width:100%;max-width:700px;margin:auto 0;animation:fx-in 240ms ease-out">
         <canvas ref="{{ netCanvasRef }}" style="position:absolute;inset:-118px;width:calc(100% + 236px);height:calc(100% + 236px);opacity:0.95;pointer-events:none"></canvas>
         <div style="position:relative;border-radius:5px;box-shadow:0 0 50px rgba(95,158,160,0.1),inset 0 0 90px rgba(95,158,160,0.05),inset 0 0 0 1px rgba(159,211,174,0.12);background:radial-gradient(120% 100% at 20% 0%,rgba(9,26,20,0.94),rgba(3,11,9,0.93));padding:40px 44px 38px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px">
+          <div style="margin-bottom:20px">
             <div style="font-size:10px;letter-spacing:0.3em;color:rgba(95,158,160,0.95)">{{ open.kicker }}</div>
-            <button onClick="{{ closeModal }}" style="all:unset;cursor:pointer;font-family:'VT323',monospace;font-size:19px;line-height:1;color:#9FD3AE;border:1px solid rgba(159,211,174,0.38);padding:1px 9px 3px">X</button>
           </div>
           <div style="font-family:'VT323',monospace;font-size:clamp(30px,4vw,44px);line-height:1.05;color:#E4FFEE;margin-bottom:18px">{{ open.title }}</div>
           <div style="font-size:14px;line-height:1.78;color:rgba(228,255,238,0.72);text-wrap:pretty;margin-bottom:24px">{{ open.body }}</div>
           <sc-if value="{{ open.hasChips }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px">
               <sc-for list="{{ open.chips }}" as="chip" hint-placeholder-count="4">
-                <span style="font-size:10px;letter-spacing:0.12em;color:rgba(159,211,174,0.9);border:1px solid rgba(159,211,174,0.28);padding:4px 9px">{{ chip }}</span>
+                <sc-if value="{{ chip.plain }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:10px;letter-spacing:0.12em;color:rgba(159,211,174,0.9);border:1px solid rgba(159,211,174,0.28);padding:4px 9px">{{ chip.label }}</span>
+                </sc-if>
+                <sc-if value="{{ chip.linked }}" hint-placeholder-val="{{ false }}">
+                  <a href="{{ chip.url }}" target="_blank" rel="noopener" style="font-size:10px;letter-spacing:0.12em;color:#E4FFEE;text-decoration:none;border:1px solid rgba(159,211,174,0.75);background:rgba(159,211,174,0.14);box-shadow:0 0 8px rgba(159,211,174,0.35);padding:4px 9px" style-hover="background:rgba(159,211,174,0.3)">{{ chip.label }} ↗</a>
+                </sc-if>
               </sc-for>
             </div>
           </sc-if>
@@ -175,6 +179,10 @@
         </div>
       </div>
     </div>
+    <button onClick="{{ closeModal }}" aria-label="Close" style="all:unset;box-sizing:border-box;position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;width:62px;padding:9px 0 5px;color:#9FD3AE;border:1px solid rgba(159,211,174,0.55);border-radius:5px;background:rgba(3,11,9,0.92);box-shadow:0 0 14px rgba(159,211,174,0.25),inset 0 0 12px rgba(95,158,160,0.12);animation:fx-in 240ms ease-out" style-hover="color:#E4FFEE;background:rgba(14,36,28,0.95);box-shadow:0 0 22px rgba(159,211,174,0.45),inset 0 0 12px rgba(95,158,160,0.2)">
+      <svg width="21" height="21" viewBox="0 0 7 7" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="6" y="0" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/></svg>
+      <span style="font-family:'VT323',monospace;font-size:13px;letter-spacing:0.2em;line-height:1;padding-left:0.2em">CLOSE</span>
+    </button>
   </sc-if>
 
 </div>
@@ -214,10 +222,10 @@ class Component extends DCLogic {
   flyTo = -1;      // hotspot the camera is gliding to before its panel opens
 
   sections = [
-    { kicker:'MUSHROOM RING // ORIGIN', title:'Cultivating signal from noise', body:'Ph.D. with 18+ years experience at the intersection of bio and digital technology. Leading AI/ML, data engineering, software engineering, DevOps and enterprise IT for synthetic biology. Non digital: trail running, mountain biking, hiking.', chips:['Amyris','Centene','Bayer','Monsanto','CDS'], links:[{label: 'LinkedIn', url: 'https://www.linkedin.com/in/dmitrygrapov/'},{label: 'Resume', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw'},{label: 'CV', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA'},{label: 'CDS', url: 'https://creative-data.science/'}] },
-    { kicker:'THE HOLLOW // CODE, SCIENCE & PORTFOLIO', title:'Open tools for messy data', body:'Metabolomics, network analysis, and machine learning pipelines grown into open software. Most-starred: MetaMapR and DeviumWeb, each built to make Omics data legible instead of opaque.', chips:['MetaMapR','DeviumWeb','networkly','CTSgetR','TeachingDemos'], links:[{label: 'GitHub', url: 'https://github.com/dgrapov'},{label: 'MetaMapR', url: 'http://dgrapov.github.io/MetaMapR/'},{label: 'DeviumWeb', url: 'http://dgrapov.github.io/DeviumWeb/'},{label: 'networkly', url: 'http://dgrapov.github.io/networkly'},{label: 'Scholar', url: 'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en'}] },
+    { kicker:'MUSHROOM RING // ORIGIN', title:'Cultivating signal from noise', body:'Ph.D. with 18+ years experience at the intersection of bio and digital technology. Leading AI/ML, data engineering, software engineering, DevOps and enterprise IT for synthetic biology. Non digital: trail running, mountain biking, hiking.', chips:['Amyris','Centene','Bayer','Monsanto','WHNRC-USDA',{label: 'CDS', url: 'https://creative-data.science/'}], links:[{label: 'LinkedIn', url: 'https://www.linkedin.com/in/dmitrygrapov/'},{label: 'Resume', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9M3FmWXVlb05pdm8/view?resourcekey=0-YUui0qQSQvIcYCjw0ls-zw'},{label: 'CV', url: 'https://drive.google.com/file/d/0B51AEMfo-fh9Z05aM2p6XzFIOFE/view?resourcekey=0-eWLTXJPfdNmCeAK9OWQpQA'}] },
+    { kicker:'THE HOLLOW // CODE, SCIENCE & PORTFOLIO', title:'Open tools for messy data', body:'Metabolomics, network analysis, and machine learning pipelines grown into open software. Most-starred: MetaMapR and DeviumWeb, each built to make Omics data legible instead of opaque.', chips:[], links:[{label: 'GitHub', url: 'https://github.com/dgrapov'},{label: 'MetaMapR', url: 'http://dgrapov.github.io/MetaMapR/'},{label: 'networkly', url: 'http://dgrapov.github.io/networkly'},{label: 'CTSgetR', url: 'https://github.com/dgrapov/CTSgetR'},{label: 'TeachingDemos', url: 'https://github.com/dgrapov/TeachingDemos'},{label: 'imDEV', url: 'https://sourceforge.net/projects/imdev/'},{label: 'DAVE', url: 'https://creative-data.science/dave/'},{label: 'Scholar', url: 'https://scholar.google.com/citations?user=zfp5U0QAAAAJ&hl=en'}] },
     { kicker:'SLIME MOLD // TEACHING', title:'Knowledge spreads root to root', body:'Workshops, conference talks, and open tutorials on multivariate analysis, gene ontology, and network biology.', chips:[], links:[{label: 'Demos', url: 'https://github.com/dgrapov/TeachingDemos'},{label: 'Slides', url: 'https://www.slideshare.net/dgrapov'},{label: 'Video', url: 'https://www.youtube.com/user/dgrapov/videos'}] },
-    { kicker:'THE CROW // WRITING & ART', title:'Beyond the dataframe', body:'Field notes on data science, programming, and machine learning, art and code.', chips:[], links:[{label: 'CDS Blog', url: 'https://creativedatasolutions.github.io/cds.blog/'},{label: 'imDEV Blog', url: 'https://imdevsoftware.wordpress.com/'},{label: 'Flickr', url: 'https://www.flickr.com/people/dgrapov/'}] },
+    { kicker:'THE CROW // WRITING & ART', title:'Beyond the dataframe', body:'Field notes on data science, programming, and machine learning, art and code.', chips:[], links:[{label: 'CDS Blog', url: 'https://creativedatasolutions.github.io/cds.blog/'},{label: 'imDEV Blog', url: 'https://imdevsoftware.wordpress.com/'},{label: 'Flickr', url: 'https://www.flickr.com/people/dgrapov/'},{label: 'Music', url: 'https://suno.com/@dgrapov'}] },
     { kicker:'THE SPRING // CONTACT', title:'To live is to grow', body:'Open to collaboration, consulting, and conversations about network graphs or trail routes.', chips:[], links:[{label: 'Email', url: 'mailto:dmitry@creative-data.solutions'},{label: 'LinkedIn', url: 'https://www.linkedin.com/in/dmitrygrapov/'},{label: 'GitHub', url: 'https://github.com/dgrapov'}] },
   ];
 
@@ -1676,7 +1684,7 @@ class Component extends DCLogic {
       hintKey: 'h' + this.state.hintIdx + (this.state.past ? 'p' : '') + (this.state.hoverIndex >= 0 ? 'o' : ''),
       foundLabel: `${this.state.found.length}/${this.sections.length} FOUND`,
       isOpen: this.state.openIndex >= 0,
-      open: { ...open, hasChips: open.chips.length > 0 },
+      open: { ...open, hasChips: open.chips.length > 0, chips: open.chips.map(c => typeof c === 'string' ? { label: c, plain: true, linked: false } : { ...c, plain: !c.url, linked: !!c.url }) },
       closeModal: () => this.closeModal(),
       labelRef: this.labelRef,
       menuOpen: this.state.menuOpen,
